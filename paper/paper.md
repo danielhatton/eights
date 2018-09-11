@@ -92,6 +92,38 @@ Automatic Drawing Macro:
   first angle projection sets for multiple 3D objects on the same
   drawing sheet.
 
+It is not only in the manufacturing sector that standardized
+axonometric drawings have proved important to clear communication:
+scholarly research has also benefited from this language.  For
+example, in the study of human anatomy, standardization of axonometric
+drawing sets to the BS 8888 standard has been used to reduce both
+cumulative uncertainty in position co-ordinates and difficulty of
+interpretation associated with the presentation, in published papers,
+of geometric data on the human skeleton [@Magee:2012:CIS]; and in
+archaeology, the standard first-angle projection set has been used to
+facilitate unambiguous description of the laboratory methods used to
+infer manufacturing methods from surface profilometry of ancient
+monumental artefacts [@Moitinho_de_Almeida:2014:MDT].  In scholarly
+research in physics, one finds a cautionary tale concerning the
+consequences when no standardized language is available for
+engineering drawings: in foundational seventeenth-century experimental
+research in hydrostatics, the discovery of effects, in the force
+balance on columns of water and air, due to the solubility of air in
+water and to adhesion between water and solid surfaces, was for some
+time hotly contested due to a lack of reproducibility of results
+between subtly different sets of apparatus [@Shapin:2011:LAP].  In the
+absence of a standard for engineering drawings, attempts to
+communicate between different research groups, using a combination of
+text and schematic diagrams, what the differences between their
+respective apparatus were, proved fruitless, and consensus on the
+experimental facts was eventually achieved only by the long-range
+transport of actual experimental rigs, across international borders,
+for side-by-side comparison [@Shapin:2011:LAP].  So deep did the
+confusion run that, more than three centuries later, @Shapin:2011:LAP
+still found themselves with much work to do, in attempting to
+understand exactly what were the relevant differences between the
+respective experimental rigs.
+
 # Acknowledgements
 
 I would like to thank Dr. Frank Abraham, for guidance on issues of the
