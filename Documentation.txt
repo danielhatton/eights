@@ -22,9 +22,8 @@ Lesser General Public License, and the GNU General Public License
 which it incorporates, for more details.
 
 You should have received a copy of the GNU Lesser General Public
-License [in file COPYING.txt], and the GNU General Public License
-which it incorporates [in file COPYING_ANNEX.txt], along with this
-program.  If not, see <https://www.gnu.org/licenses/>.
+License [in file LICENSE] along with this program.  If not, see
+<https://www.gnu.org/licenses/>.
 
 Daniel Hatton thanks Dr. Justin E. Rigden, Specialist Intellectual
 Property Advisor, for authorizing, on behalf of the University of
