@@ -50,6 +50,70 @@ automates the construction of a page of 2D axonometric drawings in
 first angle projection, in a style consistent (to the best of the
 module author's ability) with the BS 8888:2011 standard.
 
+STATEMENT OF NEED
+
+The creative process behind detailed engineering design now typically takes place in 3D
+CAD packages (Quintana, Rivest, Pellerin, Venne, & Kheddouci, 2010). However, for
+this creative process actually to lead to an embodiment of the design being manufac-
+tured, this creative process must be followed by communication of the content of the
+design to a manufacturing facility. There are two necessary requirements for success:
+firstly, the communication must include information on all those aspects of the design
+that are necessary to complete manufacture, and to verify by inspection that the com-
+pleted, manufactured artefact matches the design (Quintana et al., 2010); secondly, the
+communication must be in a well-defined (usually graphical) language, so that it can be
+understood at the manufacturing facility in a way that permits successful manufacturing
+and inspection (Dobelis et al., 2018; Quintana et al., 2010). The drive to meet both of
+these requirements has led to the development of published standards for design commu-
+nication (Dobelis et al., 2018), of which BS 8888:2011 (Technical product documentation
+and specification BS 8888, 2011) is one. These standards are in a very advanced state of
+maturity for 2D engineering drawings, but despite efforts in recent years to develop sim-
+ilar standards for 3D models, the standards for 3D models remain somewhat less mature
+(Quintana et al., 2010). As a result, 2D drawings remain a crucial medium for commu-
+nication of design information to manufacturing facilities, and possessing the capability
+for automated generation of standards-compliant 2D drawings from a 3D model is an im-
+portant criterion by which the technical quality of 3D CAD software packages is assessed
+(Hughes, 2013; Kannan & Vinay, 2008). Hence, by automating the process of producing
+certain standards-compliant 2D drawings, the eights module offers the opportunity for the
+FreeCAD CAD package (FreeCAD version 0.15 user manual, n.d.) to be more favourably
+assessed against this criterion in future.
+
+One automated tool, for generating 2D drawings in first angle projection from a 3D model
+in FreeCAD, already exists: the FreeCAD Automatic Drawing Macro (“Macro automatic
+drawing,” 2016). A full analysis of the relative advantages and disadvantages of the
+Automatic Drawing Macro, and the eights module announced here, can be found in the
+"COMPARISON AND CONTRAST WITH OTHER SOFTWARE OF SIMILAR PURPOSE" section of this
+documentation file.  For the purposes of this statement of need, it is
+sufficient to mention two of the relative disadvantages of the Automatic Drawing Macro:
+-  the Automatic Drawing Macro does not attempt to comply with BS 8888 as regards
+   the format of the drawing sheet and its title block;
+-  the Automatic Drawing Macro does not offer the ability to include first angle pro-
+   jection sets for multiple 3D objects on the same drawing sheet.
+
+It is not only in the manufacturing sector that standardized axonometric drawings have
+proved important to clear communication: scholarly research has also benefited from this
+language. For example, in the study of human anatomy, standardization of axonometric
+drawing sets to the BS 8888 standard has been used to reduce both cumulative uncertainty
+in position co-ordinates and difficulty of interpretation associated with the presentation,
+in published papers, of geometric data on the human skeleton (Magee, McClelland, &
+Winder, 2012); and in archaeology, the standard first-angle projection set has been used
+to facilitate unambiguous description of the laboratory methods used to infer manufac-
+turing methods from surface profilometry of ancient monumental artefacts (Moitinho de
+Almeida & Barceló, 2014). In scholarly research in physics, one finds a cautionary tale
+concerning the consequences when no standardized language is available for engineering
+drawings: in foundational seventeenth-century experimental research in hydrostatics, the
+discovery of effects, in the force balance on columns of water and air, due to the solubility
+of air in water and to adhesion between water and solid surfaces, was for some time hotly
+contested due to a lack of reproducibility of results between subtly different sets of appa-
+ratus (Shapin & Schaffer, 2011). In the absence of a standard for engineering drawings,
+attempts to communicate between different research groups, using a combination of text
+and schematic diagrams, what the differences between their respective apparatus were,
+proved fruitless, and consensus on the experimental facts was eventually achieved only
+by the long-range transport of actual experimental rigs, across international borders, for
+side-by-side comparison (Shapin & Schaffer, 2011). So deep did the confusion run that,
+more than three centuries later, Shapin & Schaffer (2011) still found themselves with
+much work to do, in attempting to understand exactly what were the relevant differences
+between the respective experimental rigs.
+
 PREREQUISITES
 
 For this module to be useful, it will be necessary to have a working
@@ -469,3 +533,47 @@ properties of a Drawing::FeatureViewPart object, as being in
 millimetres.  This assumption has so far proved correct on the systems
 on which the present module has been tested, but there may be some
 FreeCAD configuration option that can render it incorrect.
+
+REFERENCES
+
+Dobelis, M., Polinceusz, P., Sroka-Bizon, M., Tytkowski, K., Velichova, D., & Vansevicius,
+A. (2018). Is the constructional drawing an international language for engineers? In
+L. Cocchiarella (Ed.), ICGG 2018 — proceedings of the 18th international conference
+on geometry and graphics, Advances in intelligent systems and computing (Vol. 809,
+pp. 1542–1552). Milan: Springer International Publishing. doi:10.1007/978-3-319-95588-
+9_137
+
+FreeCAD version 0.15 user manual. (n.d.). Retrieved from https://github.com/
+FreeCAD/FreeCAD/releases/download/0.15/FreeCAD-0.15_manual.pdf
+
+Hughes, N. (2013). CAD for the workshop. CROWOOD metalworking guides. Ramsbury:
+Crowood Press.
+
+Kannan, G., & Vinay, V. P. (2008). Multi-criteria decision making for the selection of
+CAD/CAM system. Int. J. Interact. Des. Manuf., 2(3), 151–159. doi:10.1007/s12008-
+008-0045-5
+
+Macro automatic drawing. (2016, September). World-Wide Web page. Retrieved from
+https://www.freecadweb.org/wiki/Macro_Automatic_drawing
+
+Magee, J., McClelland, B., & Winder, J. (2012). Current issues with standards in the
+measurement and documentation of human skeletal anatomy. J. Anat., 221(3), 240–251.
+doi:10.1111/j.1469-7580.2012.01535.x
+
+Moitinho de Almeida, V., & Barceló, J. A. (2014). Measuring and describing 3D texture.
+In F. Giligny, F. Djindjian, L. Costa, P. Moscati, & S. Robert (Eds.), Proceedings of the
+42nd annual conference on computer applications and quantitative methods in archaeol-
+ogy CAA 2014 — 21st century archaeology (pp. 519–528). Paris: CAA International;
+Archaeopress.
+
+Quintana, V., Rivest, L., Pellerin, R., Venne, F., & Kheddouci, F. (2010). Will
+model-based definition replace engineering drawings throughout the product lifecy-
+cle? A global perspective from aerospace industry. Comput. Ind., 61(5), 497–508.
+doi:10.1016/j.compind.2010.01.005
+
+Shapin, S., & Schaffer, S. (2011). Leviathan and the air-pump: Hobbes, Boyle, and
+the experimental life. Princeton classics (Paperback reissue, with a new introduction.).
+Princeton: Princeton University Press.
+
+Technical product documentation and specification BS 8888:2011. (2011). (Sixth edition.).
+London: British Standards Institution.
