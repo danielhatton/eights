@@ -1,4 +1,4 @@
-BibTeX: paper/paper  
+bibliography=paper/paper.bib
 
 # About this documentation file
 
