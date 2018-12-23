@@ -99,29 +99,67 @@ class create_eights_drawing_sheet:
                 # "supplementary information" fields in the FreeCAD
                 # template.
 
-                thesheet.EditableTexts\
-                        = [unicode(self.creator, 'utf-8'),
-                           unicode(self.longtitle, 'utf-8'),
-                           unicode('Legal owner: '+self.legalowner, 'utf-8'),
-                           unicode('To be approved by: '+self.approver,
-                                   'utf-8'),
-                           unicode('Document type: '+self.doctype, 'utf-8'),
-                           unicode('Document status: '
-                                   +self.docstatus, 'utf-8'),
-                           unicode(' ', 'utf-8'),
-                           unicode(' ', 'utf-8'),
-                           unicode(self.pagesize, 'utf-8'),
-                           unicode('%d' % (self.sheetnum)+' / '
-                                   +'%d' % (self.totalsheets),
-                                   'utf-8'),
-                           unicode('1 : '+'%d' % (self.inverse_scale),
-                                   'utf-8'),
-                           unicode(self.partlist, 'utf-8'),
-                           unicode(self.drawingnum, 'utf-8'),
-                           unicode('%04d' % (self.year)+'-'
-                                   +'%02d' % (self.month)
-                                   +'-'+'%02d' % (self.day), 'utf-8'),
-                           unicode(self.revision, 'utf-8'),]
+                # Unfortunately, the mapping of actual title block
+                # fields to array element numbers in the
+                # "EditableTexts" property of a Drawing::FeaturePage
+                # object is different between different versions of
+                # FreeCAD., so it's necessary to detect the FreeCAD
+                # version number here.
+
+                versionnumber = float(FreeCAD.Version()[0])\
+                                +0.01*float(FreeCAD.Version()[1])
+
+                print "new one!"
+                if (versionnumber < 0.155):
+                        thesheet.EditableTexts\
+                                = [unicode(self.creator, 'utf-8'),
+                                   unicode(self.longtitle, 'utf-8'),
+                                   unicode('Legal owner: '+self.legalowner,
+                                           'utf-8'),
+                                   unicode('To be approved by: '+self.approver,
+                                           'utf-8'),
+                                   unicode('Document type: '+self.doctype,
+                                           'utf-8'),
+                                   unicode('Document status: '
+                                           +self.docstatus, 'utf-8'),
+                                   unicode(self.pagesize, 'utf-8'),
+                                   unicode('%d' % (self.sheetnum)+' / '
+                                           +'%d' % (self.totalsheets),
+                                           'utf-8'),
+                                   unicode('1 : '+'%d' % (self.inverse_scale),
+                                           'utf-8'),
+                                   unicode(self.partlist, 'utf-8'),
+                                   unicode(self.drawingnum, 'utf-8'),
+                                   unicode('%04d' % (self.year)+'-'
+                                           +'%02d' % (self.month)
+                                           +'-'+'%02d' % (self.day), 'utf-8'),
+                                   unicode(self.revision, 'utf-8'),]
+                else:
+                        thesheet.EditableTexts\
+                                = [unicode(self.creator, 'utf-8'),
+                                   unicode(self.longtitle, 'utf-8'),
+                                   unicode('Legal owner: '+self.legalowner,
+                                           'utf-8'),
+                                   unicode('To be approved by: '+self.approver,
+                                           'utf-8'),
+                                   unicode('Document type: '+self.doctype,
+                                           'utf-8'),
+                                   unicode('Document status: '
+                                           +self.docstatus, 'utf-8'),
+                                   unicode(' ', 'utf-8'),
+                                   unicode(' ', 'utf-8'),
+                                   unicode(self.pagesize, 'utf-8'),
+                                   unicode('%d' % (self.sheetnum)+' / '
+                                           +'%d' % (self.totalsheets),
+                                           'utf-8'),
+                                   unicode('1 : '+'%d' % (self.inverse_scale),
+                                           'utf-8'),
+                                   unicode(self.partlist, 'utf-8'),
+                                   unicode(self.drawingnum, 'utf-8'),
+                                   unicode('%04d' % (self.year)+'-'
+                                           +'%02d' % (self.month)
+                                           +'-'+'%02d' % (self.day), 'utf-8'),
+                                   unicode(self.revision, 'utf-8'),]
                 self.document.recompute()
 
 class add_first_angle_projection_symbol:
