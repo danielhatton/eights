@@ -1,5 +1,5 @@
 ---
-bibliography: paper.bib
+bibliography: paper/paper.bib
 ---
 
 # About this documentation file
