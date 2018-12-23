@@ -109,7 +109,6 @@ class create_eights_drawing_sheet:
                 versionnumber = float(FreeCAD.Version()[0])\
                                 +0.01*float(FreeCAD.Version()[1])
 
-                print "new one!"
                 if (versionnumber < 0.155):
                         thesheet.EditableTexts\
                                 = [unicode(self.creator, 'utf-8'),
