@@ -464,15 +464,6 @@ by github user hamish2014; however, the author of the present module
 has been unable to find a convenient way of scripting the Drawing
 Dimensioning Workbench in Python.
 
-If run under FreeCAD 0.15 (or earlier), the create_it method in the
-create_eights_drawing_sheet class incorrectly places the various items
-of text information correctly in the title block of the
-Drawing::FeaturePage object it creates.  That's because the number and
-order of elements, in the EditableTexts property of a
-Drawing::FeaturePage object using an ISO7200 template, changed between
-FreeCAD 0.15 and FreeCAD 0.16, and this version of the present module
-is tuned to place the text information correctly under FreeCAD 0.16.
-
 The create_it method in the create_eights_drawing_sheet class doesn't
 trap any attempt by the user to select a combination of paper size and
 orientation that doesn't exist in FreeCAD's collection of ISO7200
