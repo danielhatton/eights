@@ -1,4 +1,6 @@
-bibliography=paper/paper.bib
+---
+bibliography: paper.bib
+---
 
 # About this documentation file
 
