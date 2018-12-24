@@ -1,7 +1,3 @@
----
-bibliography: paper/paper.bib
----
-
 # About this documentation file
 
 This is file `README.md`
@@ -49,52 +45,55 @@ PL4 8AA
 # Description
 
 File `eights.py` is a Python module intended for use with the
-open-source 3D computer-aided design package FreeCAD [@a:1:FVU].  The
-module automates the construction of a page of 2D axonometric drawings
-in first angle projection, in a style consistent (to the best of the
-module author's ability) with the BS 8888:2011 standard [@a:2011:TPD].
+open-source 3D computer-aided design package FreeCAD (FreeCAD version
+0.15 user manual, n.d.).  The module automates the construction of a
+page of 2D axonometric drawings in first angle projection, in a style
+consistent (to the best of the module author's ability) with the BS
+8888:2011 standard (Technical product documentation and specification
+BS 8888, 2011).
 
 # Statement of need
 
 The creative process behind detailed engineering design now typically
-takes place in 3D CAD packages [@Quintana:2010:WMB]. However, for this
-creative process actually to lead to an embodiment of the design being
-manufactured, this creative process must be followed by communication
-of the content of the design to a manufacturing facility. There are
-two necessary requirements for success: firstly, the communication
-must include information on all those aspects of the design that are
-necessary to complete manufacture, and to verify by inspection that
-the completed, manufactured artefact matches the design
-[@Quintana:2010:WMB]; secondly, the communication must be in a
-well-defined (usually graphical) language, so that it can be
+takes place in 3D CAD packages (Quintana et al., 2010). However, for
+this creative process actually to lead to an embodiment of the design
+being manufactured, this creative process must be followed by
+communication of the content of the design to a manufacturing
+facility. There are two necessary requirements for success: firstly,
+the communication must include information on all those aspects of the
+design that are necessary to complete manufacture, and to verify by
+inspection that the completed, manufactured artefact matches the
+design (Quintana et al., 2010); secondly, the communication must be in
+a well-defined (usually graphical) language, so that it can be
 understood at the manufacturing facility in a way that permits
-successful manufacturing and inspection [@Quintana:2010:WMB;
-@Dobelis:2018:ICD]. The drive to meet both of these requirements has
-led to the development of published standards for design communication
-[@Dobelis:2018:ICD], of which BS 8888:2011 [@a:2011:TPD] is one. These
+successful manufacturing and inspection (Quintana et al., 2010;
+Dobelis et al., 2018). The drive to meet both of these requirements
+has led to the development of published standards for design
+communication (Dobelis et al., 2018), of which BS 8888:2011 (Technical
+product documentation and specification BS 8888, 2011) is one. These
 standards are in a very advanced state of maturity for 2D engineering
 drawings, but despite efforts in recent years to develop similar
 standards for 3D models, the standards for 3D models remain somewhat
-less mature [@Quintana:2010:WMB]. As a result, 2D drawings remain a
+less mature (Quintana et al., 2010). As a result, 2D drawings remain a
 crucial medium for communication of design information to
 manufacturing facilities, and possessing the capability for automated
 generation of standards-compliant 2D drawings from a 3D model is an
 important criterion by which the technical quality of 3D CAD software
-packages is assessed [@Kannan:2008:MCD; @Hughes:2013:CW]. Hence, by
+packages is assessed (Kannan & Vinay, 2008; Hughes, 2013). Hence, by
 automating the process of producing certain standards-compliant 2D
 drawings, the eights module offers the opportunity for the FreeCAD CAD
-package [@a:1:FVU] to be more favourably assessed against this
-criterion in future.
+package (FreeCAD version 0.15 user manual, n.d.) to be more favourably
+assessed against this criterion in future.
 
 One automated tool, for generating 2D drawings in first angle
 projection from a 3D model in FreeCAD, already exists: the FreeCAD
-Automatic Drawing Macro [@a:2016:ADM]. A full analysis of the relative
-advantages and disadvantages of the Automatic Drawing Macro, and the
-eights module announced here, can be found in the "Comparison and
-contrast with other software of similar purpose" section of this
-documentation file.  For the purposes of this statement of need, it is
-sufficient to mention two of the relative disadvantages of the
-Automatic Drawing Macro:
+Automatic Drawing Macro (Macro Automatic Drawing, 2016). A full
+analysis of the relative advantages and disadvantages of the Automatic
+Drawing Macro, and the eights module announced here, can be found in
+the "Comparison and contrast with other software of similar purpose"
+section of this documentation file.  For the purposes of this
+statement of need, it is sufficient to mention two of the relative
+disadvantages of the Automatic Drawing Macro:
 
 * the Automatic Drawing Macro does not attempt to comply with BS 8888
   as regards the format of the drawing sheet and its title block;
@@ -109,30 +108,30 @@ in the study of human anatomy, standardization of axonometric drawing
 sets to the BS 8888 standard has been used to reduce both cumulative
 uncertainty in position co-ordinates and difficulty of interpretation
 associated with the presentation, in published papers, of geometric
-data on the human skeleton [@Magee:2012:CIS]; and in archaeology, the
-standard first-angle projection set has been used to facilitate
+data on the human skeleton (Magee et al., 2012); and in archaeology,
+the standard first-angle projection set has been used to facilitate
 unambiguous description of the laboratory methods used to infer
 manufacturing methods from surface profilometry of ancient monumental
-artefacts [@Moitinho_de_Almeida:2014:MDT]. In scholarly research in
-physics, one finds a cautionary tale concerning the consequences when
-no standardized language is available for engineering drawings: in
-foundational seventeenth-century experimental research in
+artefacts (Moitinho de Almeida & Barceló, 2014). In scholarly research
+in physics, one finds a cautionary tale concerning the consequences
+when no standardized language is available for engineering drawings:
+in foundational seventeenth-century experimental research in
 hydrostatics, the discovery of effects, in the force balance on
 columns of water and air, due to the solubility of air in water and to
 adhesion between water and solid surfaces, was for some time hotly
 contested due to a lack of reproducibility of results between subtly
-different sets of apparatus [@Shapin:2011:LAP]. In the absence of a
-standard for engineering drawings, attempts to communicate between
-different research groups, using a combination of text and schematic
-diagrams, what the differences between their respective apparatus
-were, proved fruitless, and consensus on the experimental facts was
-eventually achieved only by the long-range transport of actual
-experimental rigs, across international borders, for side-by-side
-comparison [@Shapin:2011:LAP]. So deep did the confusion run that,
-more than three centuries later, @Shapin:2011:LAP still found
-themselves with much work to do, in attempting to understand exactly
-what were the relevant differences between the respective experimental
-rigs.
+different sets of apparatus (Shapin & Schaffer, 2011). In the absence
+of a standard for engineering drawings, attempts to communicate
+between different research groups, using a combination of text and
+schematic diagrams, what the differences between their respective
+apparatus were, proved fruitless, and consensus on the experimental
+facts was eventually achieved only by the long-range transport of
+actual experimental rigs, across international borders, for
+side-by-side comparison (Shapin & Schaffer, 2011). So deep did the
+confusion run that, more than three centuries later, Shapin & Schaffer
+(2011) still found themselves with much work to do, in attempting to
+understand exactly what were the relevant differences between the
+respective experimental rigs.
 
 # Prerequisites
 
@@ -140,15 +139,24 @@ For this module to be useful, it will be necessary to have a working
 installation of FreeCAD.  FreeCAD is available in the standard
 repositories of most Linux distributions, and for Windows and MAC OS X
 systems from <https://www.freecadweb.org/wiki/Download>.  The module
-has been most thoroughly tested under FreeCAD 0.16 on Scientific Linux
-7.3, but also to some extent under FreeCAD 0.15 on Windows 7
-Enterprise and FreeCAD 0.16 on Fedora 28.
+has been most thoroughly tested on FreeCAD 0.16 under Scientific Linux
+7.3 and Scientific Linux 7.5, but also to some extent on FreeCAD 0.15
+under Windows 7 Enterprise and on FreeCAD 0.16 under Fedora 28.
 
 # Installation
 
-To install, place the file `eights.py` either somewhere in the active
-user's search path for Python modules, or in the working directory
-from which FreeCAD is to be run.
+To install, place the file `eights.py` in the directory specified in
+the "Macro path" field in the ["Macro" tab of the FreeCAD preferences
+editor](https://www.freecadweb.org/wiki/Preferences_Editor#Macro)
+(being aware that any changes to this "Macro path" field, made using
+the preferences editor, do not take effect until FreeCAD is
+restarted).
+
+On some systems (at least, FreeCAD 0.16 under Scientific Linux 7.5),
+placing the file `eights.py` in the working directory from which
+FreeCAD is to be started can also be an effective installation method,
+although there are reports that this method does not work on all
+systems.
 
 # Details
 
@@ -551,3 +559,44 @@ on which the present module has been tested, but there may be some
 FreeCAD configuration option that can render it incorrect.
 
 # References
+
+* Dobelis, M., Polinceusz, P., Sroka-Bizon, M., Tytkowski, K.,
+  Velichova, D., & Vansevicius, A. (2018). Is the constructional
+  drawing an international language for engineers? In L. Cocchiarella
+  (Ed.), _ICGG 2018 — proceedings of the 18th international conference
+  on geometry and graphics, Advances in intelligent systems and
+  computing_ (Vol. 809, pp. 1542–1552). Milan: Springer International
+  Publishing. doi:`10.1007/978-3-319-95588-9_137`
+* _FreeCAD version 0.15 user manual_. (n.d.). Retrieved from
+  <https://github.com/FreeCAD/FreeCAD/releases/download/0.15/FreeCAD-0.15_manual.pdf>
+* Hughes, N. (2013). _CAD for the workshop_. CROWOOD metalworking
+  guides. Ramsbury: Crowood Press.
+* Kannan, G., & Vinay, V. P. (2008). Multi-criteria decision making
+  for the selection of CAD/CAM
+  system. _Int. J. Interact. Des. Manuf._, **2**(3),
+  151–159. doi:`10.1007/s12008-008-0045-5`
+* _Macro automatic drawing_. (2016, September). World-Wide Web
+  page. Retrieved from
+  <https://www.freecadweb.org/wiki/Macro_Automatic_drawing>
+* Magee, J., McClelland, B., & Winder, J. (2012). Current issues with
+  standards in the measurement and documentation of human skeletal
+  anatomy. _J. Anat._, **221**(3), 240–251.
+  doi:`10.1111/j.1469-7580.2012.01535.x`
+* Moitinho de Almeida, V., & Barceló, J. A. (2014). Measuring and
+  describing 3D texture.  In F. Giligny, F. Djindjian, L. Costa,
+  P. Moscati, & S. Robert (Eds.), _Proceedings of the 42nd annual
+  conference on computer applications and quantitative methods in
+  archaeology CAA 2014 — 21st century archaeology_
+  (pp. 519–528). Paris: CAA International; Archaeopress.
+* Quintana, V., Rivest, L., Pellerin, R., Venne, F., & Kheddouci,
+  F. (2010). Will model-based definition replace engineering drawings
+  throughout the product lifecycle? A global perspective from
+  aerospace industry. _Comput. Ind._, **61**(5), 497–508.
+  doi:`10.1016/j.compind.2010.01.005`
+* Shapin, S., & Schaffer, S. (2011). _Leviathan and the air-pump:
+  Hobbes, Boyle, and the experimental life_. Princeton classics
+  (Paperback reissue, with a new introduction.).  Princeton: Princeton
+  University Press.
+* _Technical product documentation and specification BS
+  8888:2011_. (2011). (Sixth edition.).  London: British Standards
+  Institution.
