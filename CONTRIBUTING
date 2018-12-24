@@ -1,0 +1,94 @@
+ABOUT THIS DOCUMENTATION FILE
+
+This is file CONTRIBUTING.
+
+CONTRIBUTING contains guidance on how to participate in the
+development of the "eights" project, which is intended to automate the
+construction of 2D axonometric drawings in first angle projection,
+within the open-source computer-aided design package FreeCAD.
+
+CONTRIBUTING was written by Dr. Daniel C. Hatton
+
+Copyright (C) 2017-2018 University of Plymouth Higher Education
+Corporation
+
+This program, including this documentation file, is free software: you
+can redistribute it and/or modify it under the terms of the GNU Lesser
+General Public License as published by the Free Software Foundation:
+version 3 of the License.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License, and the GNU General Public License
+which it incorporates, for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License [in file LICENSE] along with this program.  If not, see
+<https://www.gnu.org/licenses/>.
+
+Daniel Hatton thanks Dr. Justin E. Rigden, Specialist Intellectual
+Property Advisor, for authorizing, on behalf of the University of
+Plymouth Higher Education Corporation, the release of this program
+under the licence terms stated above.
+
+CONTACT
+
+Daniel Hatton can be contacted on <daniel.hatton@plymouth.ac.uk>
+or at
+Autonomous Marine Systems Group,
+School of Engineering,
+University of Plymouth,
+Plymouth,
+UK.
+PL4 8AA
+
+GUIDANCE ON PARTICIPATION
+
+Collaborators in the development of the "eights" project are always
+welcome.  I would expect that most common ways in which people will
+wish to contribute are:
+
+- reporting bugs;
+- suggesting ways to fix the already-known bugs listed in file
+  README.md; and
+- suggesting improvements to the software.
+
+However, I don't intend the above list to impose restrictions: I'm
+also happy to entertain contributions that don't fit into any of the
+above categories.
+
+Whichever form your contribution takes, a good first port of call will
+be the "issues" page at
+<https://github.com/danielhatton/eights/issues>.  If your proposed
+contribution is relevant to any of the issues already present there,
+then you can open the page with the thread for that issue, and submit
+a comment; otherwise, you can click the "new issue" button.  Either
+way, you'll have the possibility of expressing what you propose in a
+text post and/or attaching files (although in both cases, you'll need
+to be signed in with a GitHub account).
+
+If you can't make your contribution via the "issues" page (perhaps
+because you really don't want to set up a GitHub account, or perhaps
+because some kind of firewall is blocking your access to the rather
+strange route that GitHub uses for the upload and download of file
+attachments), then as an alternative, you can e-mail your contribution
+to me, Dr. Daniel Hatton, at <daniel.hatton@plymouth.ac.uk>.
+
+As always with open-source projects, contributions are especially
+valued if they come with a patch to the code, implementing the bug
+fixes or improvements that they propose.  If you do submit a patch,
+please:
+- state clearly who owns the copyright in the patch you're submitting;
+- if you personally don't own the copyright (for example if, like me,
+  you operate under a contract of employment that assigns the
+  copyright in any code you write to your employer), then provide a
+  brief summary of the procedure by which the actual copyright-holder
+  has authorized you to submit the patch;
+- state the licence terms under which you are making the patch
+  available (for reasons of ease of integration with FreeCAD, it would
+  be particularly helpful for such contributions to be under the GNU
+  Lesser General Public Licence: for the initial release of eights, I
+  have used version 3 of the LGPL).
+
+Finally: thank you in advance to all contributors.
