@@ -148,9 +148,9 @@ under Windows 7 Enterprise and on FreeCAD 0.16 under Fedora 28.
 To install, place the file `eights.py` in the directory specified in
 the "Macro path" field in the ["Macro" tab of the FreeCAD preferences
 editor](https://www.freecadweb.org/wiki/Preferences_Editor#Macro)
-(being aware that any changes to this "Macro path" field, made using
-the preferences editor, do not take effect until FreeCAD is
-restarted).
+(in some setups, it may be necessary to restart FreeCAD once or even
+twice, to get it to recognise any change in the set of macros present
+in this directory).
 
 On some systems (at least, FreeCAD 0.16 under Scientific Linux 7.5),
 placing the file `eights.py` in the working directory from which
