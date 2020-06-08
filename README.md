@@ -135,7 +135,8 @@ repositories of most Linux distributions, and for Windows and MAC OS X
 systems from <https://www.freecadweb.org/wiki/Download>.  The module
 has been most thoroughly tested on FreeCAD 0.16 under Scientific Linux
 7.3 and Scientific Linux 7.5, but also to some extent on FreeCAD 0.15
-under Windows 7 Enterprise and on FreeCAD 0.16 under Fedora 28.
+under Windows 7 Enterprise, on FreeCAD 0.16 under Fedora 28, and on
+FreeCAD 0.18.4 under Ubuntu 20.04.
 
 # Installation
 
