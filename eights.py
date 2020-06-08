@@ -35,6 +35,7 @@
 
 # Daniel Hatton can be contacted on <dan.hatton@physics.org>
 
+import sys
 import FreeCAD
 import Part
 import Drawing
@@ -98,12 +99,23 @@ class create_eights_drawing_sheet:
                 # fields to array element numbers in the
                 # "EditableTexts" property of a Drawing::FeaturePage
                 # object is different between different versions of
-                # FreeCAD., so it's necessary to detect the FreeCAD
+                # FreeCAD, so it's necessary to detect the FreeCAD
                 # version number here.
 
                 versionnumber = float(FreeCAD.Version()[0])\
                                 +0.01*float(FreeCAD.Version()[1])
 
+                # Not only that, the Python "unicode" function has
+                # been renamed to "str" as of Python 3, so it's
+                # necessary to detect the (major part of the) Python
+                # version number as well.
+
+                pythonversionnumber = float(sys.version_info.major)
+
+                if (pythonversionnumber > 2.5):
+                        def unicode(firstarg,secondarg):
+                                return str(firstarg)
+                
                 if (versionnumber < 0.155):
                         thesheet.EditableTexts\
                                 = [unicode(self.creator, 'utf-8'),
