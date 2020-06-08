@@ -140,12 +140,9 @@ FreeCAD 0.18.4 under Ubuntu 20.04.
 
 # Installation
 
-To install, place the file `eights.py` in the directory specified in
-the "Macro path" field in the ["Macro" tab of the FreeCAD preferences
-editor](https://www.freecadweb.org/wiki/Preferences_Editor#Macro)
-(in some setups, it may be necessary to restart FreeCAD once or even
-twice, to get it to recognise any change in the set of macros present
-in this directory).
+To install, create a subdirectory called `eights` in your module
+directory (`~/.FreeCAD/Mod` on Linux, `%APPDATA%\FreeCAD\Mod` on
+Windows), and place the file `eights.py` in that subdirectory.
 
 On some systems (at least, FreeCAD 0.16 under Scientific Linux 7.5),
 placing the file `eights.py` in the working directory from which
