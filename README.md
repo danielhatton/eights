@@ -7,8 +7,10 @@ on file `eights.py` (see "Description" section below).
 
 `README.md` was written by Dr. Daniel C. Hatton
 
-Copyright (C) 2017-2018 University of Plymouth Higher Education
-Corporation
+Material up to and including release 0.2 copyright (C) 2017-2018
+University of Plymouth Higher Education Corporation
+
+Changes since release 0.2 copyright (C) 2020 Dr. Daniel C. Hatton
 
 This program, including this documentation file, is free software: you
 can redistribute it and/or modify it under the terms of the GNU Lesser
@@ -32,15 +34,7 @@ under the licence terms stated above.
 
 # Contact
 
-Daniel Hatton can be contacted on <daniel.hatton@plymouth.ac.uk>
-or at
-Autonomous Marine Systems Group,
-School of Engineering,
-University of Plymouth,
-Plymouth,
-UK.
-PL4 8AA
-
+Daniel Hatton can be contacted on <dan.hatton@physics.org>.
 
 # Description
 
@@ -557,6 +551,14 @@ properties of a `Drawing::FeatureViewPart` object, as being in
 millimetres.  This assumption has so far proved correct on the systems
 on which the present module has been tested, but there may be some
 FreeCAD configuration option that can render it incorrect.
+
+# Citing
+
+If you use the eights module to produce published work, please cite
+
+* Hatton, D. C. (2019). eights: BS 8888:2011 first angle projection
+  drawings from FreeCAD 3D model. _J. Open Source Softw._, **4**(33),
+  974-1-974-3. doi:`10.21105/joss.00974`
 
 # References
 

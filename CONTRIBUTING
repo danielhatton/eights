@@ -9,8 +9,10 @@ within the open-source computer-aided design package FreeCAD.
 
 CONTRIBUTING was written by Dr. Daniel C. Hatton
 
-Copyright (C) 2017-2018 University of Plymouth Higher Education
-Corporation
+Material up to and including release 0.2 copyright (C) 2017-2018
+University of Plymouth Higher Education Corporation
+
+Changes since release 0.2 copyright (C) 2020 Dr. Daniel C. Hatton
 
 This program, including this documentation file, is free software: you
 can redistribute it and/or modify it under the terms of the GNU Lesser
@@ -34,14 +36,7 @@ under the licence terms stated above.
 
 CONTACT
 
-Daniel Hatton can be contacted on <daniel.hatton@plymouth.ac.uk>
-or at
-Autonomous Marine Systems Group,
-School of Engineering,
-University of Plymouth,
-Plymouth,
-UK.
-PL4 8AA
+Daniel Hatton can be contacted on <dan.hatton@physics.org>
 
 GUIDANCE ON PARTICIPATION
 
@@ -73,18 +68,18 @@ because you really don't want to set up a GitHub account, or perhaps
 because some kind of firewall is blocking your access to the rather
 strange route that GitHub uses for the upload and download of file
 attachments), then as an alternative, you can e-mail your contribution
-to me, Dr. Daniel Hatton, at <daniel.hatton@plymouth.ac.uk>.
+to me, Dr. Daniel Hatton, at <dan.hatton@physics.org>.
 
 As always with open-source projects, contributions are especially
 valued if they come with a patch to the code, implementing the bug
 fixes or improvements that they propose.  If you do submit a patch,
 please:
 - state clearly who owns the copyright in the patch you're submitting;
-- if you personally don't own the copyright (for example if, like me,
-  you operate under a contract of employment that assigns the
-  copyright in any code you write to your employer), then provide a
-  brief summary of the procedure by which the actual copyright-holder
-  has authorized you to submit the patch;
+- if you personally don't own the copyright (for example if you
+  operate under a contract of employment that assigns the copyright in
+  any code you write to your employer), then provide a brief summary
+  of the procedure by which the actual copyright-holder has authorized
+  you to submit the patch;
 - state the licence terms under which you are making the patch
   available (for reasons of ease of integration with FreeCAD, it would
   be particularly helpful for such contributions to be under the GNU

@@ -8,8 +8,10 @@
 
 # eights.py was written by Dr. Daniel C. Hatton
 
-# Copyright (C) 2015-2018 University of Plymouth Higher Education
-# Corporation
+# Material up to and including release 0.2 copyright (C) 2015-2018
+# University of Plymouth Higher Education Corporation
+
+# Changes since release 0.2 copyright (C) 2020 Dr. Daniel C. Hatton
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -31,14 +33,7 @@
 # Plymouth Higher Education Corporation, the release of this program
 # under the licence terms stated above.
 
-# Daniel Hatton can be contacted on <daniel.hatton@plymouth.ac.uk>
-# or at
-# Autonomous Marine Systems Group,
-# School of Engineering,
-# University of Plymouth,
-# Plymouth,
-# UK.
-# PL4 8AA
+# Daniel Hatton can be contacted on <dan.hatton@physics.org>
 
 import FreeCAD
 import Part
