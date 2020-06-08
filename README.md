@@ -538,7 +538,10 @@ methods exit.  Unfortunately, adding commands to the end of the
 methods to close the dummy documents causes a segfault, at least under
 FreeCAD 0.16 on Scientific Linux 7.3 (and in some cases under FreeCAD
 0.16 on Fedora 28), so the methods currently leave the dummy documents
-open.
+open.  The segfault doesn't happen under FreeCAD 0.18.4 on Ubuntu
+20.04, so at some point in the future, it's likely to be safe to
+uncomment the commands in `eights.py` that will close the dummy
+documents.
 
 In setting the widths of lines in the drawing to comply with BS
 8888:2011, both the `put_it_in` method in the

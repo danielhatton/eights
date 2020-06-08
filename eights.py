@@ -267,7 +267,10 @@ class add_first_angle_projection_symbol:
                 # dummy document causes a segfault, at least under
                 # FreeCAD 0.16 on Scientific Linux 7.3 and FreeCAD
                 # 0.16 on Fedora 28, so the following command is
-                # commented out.
+                # commented out.  (The segfault doesn't happen under
+                # FreeCAD 0.18.4 on Ubuntu 20.04, so at some point in
+                # the future, it's likely to be safe to uncomment the
+                # command.)
 
                 # FreeCAD.closeDocument("Dummy")
 
@@ -431,6 +434,9 @@ class first_angle_projection:
                 # that already contains views of one shape, attempting
                 # to close the dummy document causes a segfault, at
                 # least under FreeCAD 0.16 on Scientific Linux 7.3, so
-                # the following command is commented out.
+                # the following command is commented out.  (The
+                # segfault doesn't happen under FreeCAD 0.18.4 on
+                # Ubuntu 20.04, so at some point in the future, it's
+                # likely to be safe to uncomment the command.)
 
                 # FreeCAD.closeDocument("Dummy")
