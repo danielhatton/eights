@@ -38,17 +38,31 @@
 import sys
 import FreeCAD
 import Part
-import Drawing
+
+# As of FreeCAD version 0.16, the Drawing toolbox has been deprecated,
+# and replaced by a toolbox called TechDraw.  However, it's not until
+# FreeCAD version 0.19 that TechDraw::DrawPage objects have an
+# assignable ViewObject.ShowFrames property, which is essential for BS
+# 8888:2011 compliance.  Anywhere this script tests whether the
+# FreeCAD version number is less than 0.19, it's in order to decide
+# whether to use the Drawing toolbox or the TechDraw toolbox.
+
+versionnumber = float(FreeCAD.Version()[0])\
+        +0.01*float(FreeCAD.Version()[1])
+if(versionnumber < 0.19):
+        import Drawing
+else:
+        import TechDraw
 
 class create_eights_drawing_sheet:
 
         # The purpose of this class is to provide the method
         # "create_it", which adds, to an existing FreeCAD document, a
-        # Drawing::FeaturePage object ("the sheet") whose formatting
-        # is intended to be consistent with the BS 8888:2011 standard
-        # for a drawing sheet, and populates the title block of the
-        # sheet, again in a way intended to be consistent with BS
-        # 8888:2011.
+        # TechDraw::DrawPage or Drawing::FeaturePage object ("the
+        # sheet") whose formatting is intended to be consistent with
+        # the BS 8888:2011 standard for a drawing sheet, and populates
+        # the title block of the sheet, again in a way intended to be
+        # consistent with BS 8888:2011.
 
         def __init__(self, document_in, shorttitle_in, pagesize_in,
                      orientation_in, creator_in, longtitle_in, legalowner_in,
@@ -76,16 +90,40 @@ class create_eights_drawing_sheet:
                self.revision = revision_in 
 
         def create_it(self,dummy):
-                thesheet = self.document.addObject("Drawing::FeaturePage",
-                                                self.shorttitle)
-
-                # BS 8888:2011 inherits most of its style requirements
-                # for drawing sheets from ISO7200, so FreeCAD's built-in
-                # ISO7200 templates are a good starting point.
-
-                thesheet.Template = FreeCAD.getResourceDir()\
-                        +"Mod/Drawing/Templates/"+self.pagesize\
-                        +"_"+self.orientation+"_ISO7200.svg"
+                versionnumber = float(FreeCAD.Version()[0])\
+                        +0.01*float(FreeCAD.Version()[1])
+                if (versionnumber < 0.19):
+                        thesheet =\
+                                self.document.addObject("Drawing::FeaturePage",
+                                                        self.shorttitle)
+                        # BS 8888:2011 inherits most of its style
+                        # requirements for drawing sheets from
+                        # ISO7200, so FreeCAD's built-in ISO7200
+                        # templates are a good starting point.
+                        thesheet.Template = FreeCAD.getResourceDir()\
+                                +"Mod/Drawing/Templates/"+self.pagesize\
+                                +"_"+self.orientation+"_ISO7200.svg"
+                else:
+                        thesheet =\
+                                self.document.addObject("TechDraw::DrawPage",
+                                                        self.shorttitle)
+                        thetemplate =\
+                                self.document.addObject\
+                                ("TechDraw::DrawSVGTemplate","Standard")
+                        # BS 8888:2011 inherits most of its style
+                        # requirements for drawing sheets from
+                        # ISO7200, so FreeCAD's built-in ISO7200
+                        # templates are a good starting point.  The
+                        # "TD" version of the TechDraw template has a
+                        # title block that better matches the examples
+                        # in BS 8888:2011 than the "Pep" version.
+                        thetemplate.Template = FreeCAD.getResourceDir()\
+                                +"Mod/TechDraw/Templates/"+self.pagesize\
+                                +"_"+self.orientation+"_ISO7200TD.svg"
+                        thesheet.Template = self.document.Standard
+                        # TechDraw's view frames are incompatible with
+                        # BS 8888:2011
+                        thesheet.ViewObject.ShowFrames = False
                 
                 # However, there are several fields listed in BS
                 # 8888:2011 as "mandatory" for inclusion in a title
@@ -99,16 +137,16 @@ class create_eights_drawing_sheet:
                 # fields to array element numbers in the
                 # "EditableTexts" property of a Drawing::FeaturePage
                 # object is different between different versions of
-                # FreeCAD, so it's necessary to detect the FreeCAD
-                # version number here.
-
-                versionnumber = float(FreeCAD.Version()[0])\
-                                +0.01*float(FreeCAD.Version()[1])
-
-                # Not only that, the Python "unicode" function has
-                # been renamed to "str" as of Python 3, so it's
-                # necessary to detect the (major part of the) Python
-                # version number as well.
+                # FreeCAD, so it's necessary to do things differently
+                # depending on the FreeCAD version number here.  In
+                # addition, the TechDraw::DrawPage class doesn't
+                # directly have an "EditableTexts" property, it only
+                # has it as a sub-property of the "Templates"
+                # property, and treats it as a hash, not a
+                # straightforward list.  Not only that, the Python
+                # "unicode" function has been renamed to "str" as of
+                # Python 3, so it's necessary to detect the (major
+                # part of the) Python version number as well.
 
                 pythonversionnumber = float(sys.version_info.major)
 
@@ -140,7 +178,7 @@ class create_eights_drawing_sheet:
                                            +'%02d' % (self.month)
                                            +'-'+'%02d' % (self.day), 'utf-8'),
                                    unicode(self.revision, 'utf-8'),]
-                else:
+                elif(versionnumber < 0.19):
                         thesheet.EditableTexts\
                                 = [unicode(self.creator, 'utf-8'),
                                    unicode(self.longtitle, 'utf-8'),
@@ -166,6 +204,44 @@ class create_eights_drawing_sheet:
                                            +'%02d' % (self.month)
                                            +'-'+'%02d' % (self.day), 'utf-8'),
                                    unicode(self.revision, 'utf-8'),]
+                else:
+                        texts = thesheet.Template.EditableTexts
+                        texts["AUTHOR_NAME"]\
+                                = unicode(self.creator, 'utf-8')
+                        texts["DRAWING_TITLE"]\
+                                = unicode(self.longtitle, 'utf-8')
+                        texts["SI-1"]\
+                                = unicode('Legal owner: '+self.legalowner,
+                                          'utf-8')
+                        texts["SI-2"]\
+                                = unicode('To be approved by: '+self.approver,
+                                          'utf-8')
+                        texts["FreeCAD_DRAWING"]\
+                                = unicode('Document type: '+self.doctype,
+                                          'utf-8')
+                        texts["SI-4"]\
+                                = unicode('Document status: '
+                                          +self.docstatus, 'utf-8')
+                        texts["FC-SI"]\
+                                = unicode(self.pagesize, 'utf-8')
+                        texts["FC-SH"]\
+                                = unicode('%d' % (self.sheetnum)+' / '
+                                          +'%d' % (self.totalsheets),
+                                          'utf-8')
+                        texts["FC-SC"]\
+                                = unicode('1 : '+'%d' % (self.inverse_scale),
+                                          'utf-8')
+                        texts["PN"]\
+                                = unicode(self.partlist, 'utf-8')
+                        texts["DN"]\
+                                = unicode(self.drawingnum, 'utf-8')
+                        texts["FC-DATE"]\
+                                = unicode('%04d' % (self.year)+'-'
+                                          +'%02d' % (self.month)
+                                          +'-'+'%02d' % (self.day), 'utf-8')
+                        texts["FC-REV"]\
+                                = unicode(self.revision, 'utf-8')
+                        thesheet.Template.EditableTexts =  texts
                 self.document.recompute()
 
 class add_first_angle_projection_symbol:
@@ -173,18 +249,18 @@ class add_first_angle_projection_symbol:
         # The purpose of this class is to provide the method
         # "put_it_in", which adds the standard BS 8888:2011 symbol,
         # indicating that a set of drawings are in first angle
-        # projection ("the symbol"), to an existing
-        # Drawing::FeaturePage object ("the sheet").  The method
+        # projection ("the symbol"), to an existing TechDraw::DrawPage
+        # or Drawing::FeaturePage object ("the sheet").  The method
         # put_it_in also creates a new FreeCAD Document ("the dummy
         # document"), containing various objects that are created as
         # intermediate steps on the way to adding the symbol to the
         # sheet, but which do not need to exist in the same document
         # as the sheet.  The method put_it_in also modifies the parent
         # document of the sheet, by adding to it two
-        # Drawing::FeatureViewPart objects, which are intermediate
-        # steps on the way to adding the symbol to the sheet, and
-        # which have to exist _in the same document as the sheet_ in
-        # order to add the symbol to the sheet.
+        # TechDraw::DrawViewPart or Drawing::FeatureViewPart objects,
+        # which are intermediate steps on the way to adding the symbol
+        # to the sheet, and which have to exist _in the same document
+        # as the sheet_ in order to add the symbol to the sheet.
 
         def __init__(self, H_in, h_in, d_in, xpos_in, ypos_in,
                      drawing_page_in):
@@ -221,44 +297,116 @@ class add_first_angle_projection_symbol:
                 part_in_tree = dummydoc.addObject("Part::Feature", title)
                 part_in_tree.Shape = part
                 featurepart = dummydoc.getObject(title)
-                minusxview\
-                        = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
-                                                               title
-                                                               +" from negative x")
-                reflectedone = dummydoc.addObject("Part::Mirroring",
-                                                  "reflectedone")
-                reflectedone.Source = featurepart
-                reflectedone.Normal = FreeCAD.Vector(0.0,0.0,1.0)
-                reflectedone.Base = FreeCAD.Vector(0.0,0.0,0.0)
-                minusxview.Source = reflectedone
-                minusxview.Direction = FreeCAD.Vector(-1.0,0.0,0.0)
+                versionnumber = float(FreeCAD.Version()[0])\
+                        +0.01*float(FreeCAD.Version()[1])
+                if(versionnumber < 0.19):
+                        plusxview\
+                                = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
+                                                                       title
+                                                                       +" from positive x")
+                else:
+                        plusxview\
+                                = self.drawing_page.Document.addObject("TechDraw::DrawViewPart",
+                                                                       title
+                                                                       +" from positive x")
+                plusxview.Source = featurepart
+                plusxview.Direction = FreeCAD.Vector(1.0,0.0,0.0)
 
                 # BS 8888:2011 does not specify the exact position of
                 # the symbol on the sheet, so that position is taken
                 # from user input.
 
-                minusxview.X = self.xpos
-                minusxview.Y = self.ypos
-                minusxview.Scale = 1.0
-                minusxview.Rotation = 270.0
-                minusxview.ShowHiddenLines = False
-                minusxview.LineWidth = thick
-                minusxview.HiddenWidth = thin
-                self.drawing_page.addObject(minusxview)
-                minusyview\
-                        = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
-                                                               title
-                                                               +" from negative y")
+                if(versionnumber < 0.19):
+                        
+                        # The "addView" method of a TechDraw::DrawPage
+                        # object appears to change the "X" and "Y"
+                        # properties of the TechDraw::DrawViewPart
+                        # object that's being added, so it's only when
+                        # the Drawing toolbox, rather than the
+                        # TechDraw toolbox, is being used that there's
+                        # any point setting the "X" and "Y" properties
+                        # (of the Drawing::FeatureViewPart object) here.
+                        # In any case, the "X" and "Y" properties have
+                        # to take different values when the TechDraw
+                        # toolbox is in use, since the TechDraw toolbox
+                        # measures Y in the opposite direction from the
+                        # Drawing toolbox, and the TechDraw toolbox
+                        # measures X and Y at the centre of a
+                        # DrawViewPart object, whereas the Drawing
+                        # toolbox measures X and Y at one corner of a
+                        # FeatureViewPart object.
+                        plusxview.X = self.xpos
+                        plusxview.Y = self.ypos
+                else:
+                        plusxview.ScaleType = u"Custom"
+                plusxview.Scale = 1.0
+                if(versionnumber < 0.19):
+                        plusxview.Rotation = 270.0
+                        plusxview.ShowHiddenLines = False
+                        plusxview.LineWidth = thick
+                        plusxview.HiddenWidth = thin
+                        self.drawing_page.addObject(plusxview)
+                        minusyview\
+                                = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
+                                                                       title
+                                                                       +" from negative y")
+                else:
+                        plusxview.Rotation = 0.0
+                        plusxview.HardHidden = False
+                        plusxview.ViewObject.LineWidth = thick
+                        plusxview.ViewObject.HiddenWidth = thin
+                        plusxview.Label = ""
+                        self.drawing_page.addView(plusxview)
+                        plusxview.X = self.xpos+0.5*depth
+                        plusxview.Y = float(self.drawing_page.Template.Height)\
+                                -self.ypos
+                        minusyview\
+                                = self.drawing_page.Document.addObject("TechDraw::DrawViewPart",
+                                                                       title
+                                                                       +" from negative y")
+                        
                 minusyview.Source = featurepart
                 minusyview.Direction = FreeCAD.Vector(0.0,-1.0,0.0)
-                minusyview.X = self.xpos+depth+spacing
-                minusyview.Y = self.ypos
+                if(versionnumber < 0.19):
+                        
+                        # The "addView" method of a TechDraw::DrawPage
+                        # object appears to change the "X" and "Y"
+                        # properties of the TechDraw::DrawViewPart
+                        # object that's being added, so it's only when
+                        # the Drawing toolbox, rather than the
+                        # TechDraw toolbox, is being used that there's
+                        # any point setting the "X" and "Y" properties
+                        # (of the Drawing::FeatureViewPart object) here.
+                        # In any case, the "X" and "Y" properties have
+                        # to take different values when the TechDraw
+                        # toolbox is in use, since the TechDraw toolbox
+                        # measures Y in the opposite direction from the
+                        # Drawing toolbox, and the TechDraw toolbox
+                        # measures X and Y at the centre of a
+                        # DrawViewPart object, whereas the Drawing
+                        # toolbox measures X and Y at one corner of a
+                        # FeatureViewPart object.
+                        minusyview.X = self.xpos+depth+spacing
+                        minusyview.Y = self.ypos
+                else:
+                        minusyview.ScaleType = u"Custom"
                 minusyview.Scale = 1.0
-                minusyview.Rotation = 90.0
-                minusyview.ShowHiddenLines = False
-                minusyview.LineWidth = thick
-                minusyview.HiddenWidth = thin
-                self.drawing_page.addObject(minusyview)
+                if(versionnumber < 0.19):
+                        minusyview.Rotation = 90.0
+                        minusyview.ShowHiddenLines = False
+                        minusyview.LineWidth = thick
+                        minusyview.HiddenWidth = thin
+                        self.drawing_page.addObject(minusyview)
+                else:
+                        minusyview.HardHidden = False
+                        minusyview.ViewObject.LineWidth = thick
+                        minusyview.ViewObject.HiddenWidth = thin
+                        minusyview.Label = ""
+                        self.drawing_page.addView(minusyview)
+                        minusyview.X = self.xpos+depth+0.5*width+spacing
+                        minusyview.Y = float(self.drawing_page.Template.Height)\
+                                -self.ypos
+                                
                 self.drawing_page.Document.recompute()
 
                 # Leaving the dummy document open is a waste of RAM
@@ -266,13 +414,13 @@ class add_first_angle_projection_symbol:
                 # to close it.  Unfortunately, attempting to close the
                 # dummy document causes a segfault, at least under
                 # FreeCAD 0.16 on Scientific Linux 7.3 and FreeCAD
-                # 0.16 on Fedora 28, so the following command is
-                # commented out.  (The segfault doesn't happen under
-                # FreeCAD 0.18.4 on Ubuntu 20.04, so at some point in
-                # the future, it's likely to be safe to uncomment the
-                # command.)
+                # 0.16 on Fedora 28, so the following command operates
+                # only if the FreeCAD version is 0.18.4 or later.
+                # (I've checked, and the segfault doesn't happen under
+                # FreeCAD 0.18.4 on Ubuntu 20.04.)
 
-                # FreeCAD.closeDocument("Dummy")
+                if (versionnumber >= 0.184):
+                        FreeCAD.closeDocument("Dummy")
 
 class first_angle_projection:
 
@@ -280,15 +428,16 @@ class first_angle_projection:
         # which takes any object ("the shape") which can be assigned
         # to the "Shape" property of a Part::Feature object, and adds
         # a set of axonometric drawings ("the views") of the shape in
-        # first angle projection to an existing Drawing::FeaturePage
-        # object ("the sheet"), following the conventions in BS
-        # 8888:2011.  The method fap also creates a new FreeCAD
-        # Document ("the dummy document"), containing various objects
-        # that are created as intermediate steps on the way to adding
-        # the views to the sheet, but which do not need to exist in
-        # the same document as the sheet.  The method fap also
-        # modifies the parent document of the sheet, by adding to it
-        # six Drawing::FeatureViewPart objects, which are intermediate
+        # first angle projection to an existing TechDraw::DrawPage or
+        # Drawing::FeaturePage object ("the sheet"), following the
+        # conventions in BS 8888:2011.  The method fap also creates a
+        # new FreeCAD Document ("the dummy document"), containing
+        # various objects that are created as intermediate steps on
+        # the way to adding the views to the sheet, but which do not
+        # need to exist in the same document as the sheet.  The method
+        # fap also modifies the parent document of the sheet, by
+        # adding to it six TechDraw::DrawViewPart or
+        # Drawing::FeatureViewPart objects, which are intermediate
         # steps on the way to adding the views to the sheet, and which
         # have to exist _in the same document as the sheet_ in order
         # to add the views to the sheet.
@@ -320,10 +469,18 @@ class first_angle_projection:
                                                   self.title)
                 part_in_tree.Shape = self.part
                 featurepart = dummydoc.getObject(self.title)
-                minuszview\
-                        = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
-                                                               self.title
-                                                               +" from negative z")
+                versionnumber = float(FreeCAD.Version()[0])\
+                        +0.01*float(FreeCAD.Version()[1])
+                if(versionnumber < 0.19):
+                        minuszview\
+                                = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
+                                                                       self.title
+                                                                       +" from negative z")
+                else:
+                        minuszview\
+                                = self.drawing_page.Document.addObject("TechDraw::DrawViewPart",
+                                                                       self.title
+                                                                       +" from negative z") 
                 minuszview.Source = featurepart
                 minuszview.Direction = FreeCAD.Vector(0.0,0.0,-1.0)
 
@@ -332,99 +489,326 @@ class first_angle_projection:
                 # taken from user input; similarly for the position on
                 # the sheet of the overall set of views.
 
-                minuszview.X = self.xpos+self.scale*depth+self.spacing
-                minuszview.Y = self.ypos
+                if(versionnumber < 0.19):
+                        
+                        # The "addView" method of a TechDraw::DrawPage
+                        # object appears to change the "X" and "Y"
+                        # properties of the TechDraw::DrawViewPart
+                        # object that's being added, so it's only when
+                        # the Drawing toolbox, rather than the
+                        # TechDraw toolbox, is being used that there's
+                        # any point setting the "X" and "Y" properties
+                        # (of the Drawing::FeatureViewPart object) here.
+                        # In any case, the "X" and "Y" properties have
+                        # to take different values when the TechDraw
+                        # toolbox is in use, since the TechDraw toolbox
+                        # measures Y in the opposite direction from the
+                        # Drawing toolbox, and the TechDraw toolbox
+                        # measures X and Y at the centre of a
+                        # DrawViewPart object, whereas the Drawing
+                        # toolbox measures X and Y at one corner of a
+                        # FeatureViewPart object.
+                        minuszview.X = self.xpos+self.scale*depth+self.spacing
+                        minuszview.Y = self.ypos
+                else:
+                        minuszview.ScaleType = u"Custom"
                 minuszview.Scale = self.scale
-                minuszview.Rotation = 180.0
-                minuszview.ShowHiddenLines = True
-                minuszview.LineWidth = thick
-                minuszview.HiddenWidth = thin
-                self.drawing_page.addObject(minuszview)
-                minusxview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
-                                                                  self.title
-                                                                  +" from negative x")
-                reflectedone = dummydoc.addObject("Part::Mirroring",
-                                                  "reflectedone")
-                reflectedone.Source = featurepart
-                reflectedone.Normal = FreeCAD.Vector(0.0,0.0,1.0)
-                reflectedone.Base = FreeCAD.Vector(0.0,0.0,0.0)
-                minusxview.Source = reflectedone
+                if(versionnumber < 0.19):
+                        minuszview.Rotation = 180.0
+                        minuszview.ShowHiddenLines = True
+                        minuszview.LineWidth = thick
+                        minuszview.HiddenWidth = thin
+                        self.drawing_page.addObject(minuszview)
+
+                        minusxview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
+                                                                          self.title
+                                                                          +" from negative x")
+                else:
+                        minuszview.Rotation = 0.0
+                        minuszview.HardHidden = True
+                        minuszview.ViewObject.LineWidth = thick
+                        minuszview.ViewObject.HiddenWidth = thin
+                        minuszview.Label = ""
+                        self.drawing_page.addView(minuszview)
+                        minuszview.X = self.xpos+self.scale*(depth+0.5*width)\
+                                +self.spacing
+                        minuszview.Y = float(self.drawing_page.Template.Height)\
+                                -self.ypos-0.5*self.scale*depth
+
+                        minusxview = self.drawing_page.Document.addObject("TechDraw::DrawViewPart",
+                                                                          self.title
+                                                                          +" from negative x")
+                
+                minusxview.Source = featurepart
                 minusxview.Direction = FreeCAD.Vector(-1.0,0.0,0.0)
-                minusxview.X = self.xpos
-                minusxview.Y = self.ypos+self.scale*(depth
-                                                     +height)+self.spacing
+                if(versionnumber < 0.19):
+                        
+                        # The "addView" method of a TechDraw::DrawPage
+                        # object appears to change the "X" and "Y"
+                        # properties of the TechDraw::DrawViewPart
+                        # object that's being added, so it's only when
+                        # the Drawing toolbox, rather than the
+                        # TechDraw toolbox, is being used that there's
+                        # any point setting the "X" and "Y" properties
+                        # (of the Drawing::FeatureViewPart object) here.
+                        # In any case, the "X" and "Y" properties have
+                        # to take different values when the TechDraw
+                        # toolbox is in use, since the TechDraw toolbox
+                        # measures Y in the opposite direction from the
+                        # Drawing toolbox, and the TechDraw toolbox
+                        # measures X and Y at the centre of a
+                        # DrawViewPart object, whereas the Drawing
+                        # toolbox measures X and Y at one corner of a
+                        # FeatureViewPart object.
+                        minusxview.X = self.xpos+self.scale*(2.0*depth
+                                                    +width)\
+                                                    +2.0*self.spacing
+                        minusxview.Y = self.ypos+self.scale*(depth
+                                                             +height)\
+                                                             +self.spacing
+                else:
+                        minusxview.ScaleType = u"Custom"
                 minusxview.Scale = self.scale
-                minusxview.Rotation = 270.0
-                minusxview.ShowHiddenLines = True
-                minusxview.LineWidth = thick
-                minusxview.HiddenWidth = thin
-                self.drawing_page.addObject(minusxview)
-                minusyview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
-                                                                  self.title
-                                                                  +" from negative y")
+                if(versionnumber < 0.19):
+                        minusxview.Rotation = 90.0
+                        minusxview.ShowHiddenLines = True
+                        minusxview.LineWidth = thick
+                        minusxview.HiddenWidth = thin
+                        self.drawing_page.addObject(minusxview)
+
+                        minusyview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
+                                                                          self.title
+                                                                          +" from negative y")
+                else:
+                        minusxview.Rotation = 0.0
+                        minusxview.HardHidden = True
+                        minusxview.ViewObject.LineWidth = thick
+                        minusxview.ViewObject.HiddenWidth = thin
+                        minusxview.Label = ""
+                        self.drawing_page.addView(minusxview)
+                        minusxview.X = self.xpos+self.scale*(1.5*depth+width)\
+                                +2.0*self.spacing
+                        minusxview.Y = float(self.drawing_page.Template.Height)\
+                                -self.ypos-self.scale*(depth+0.5*height)\
+                                -self.spacing
+
+                        minusyview = self.drawing_page.Document.addObject("TechDraw::DrawViewPart",
+                                                                          self.title
+                                                                          +" from negative y")
+                
                 minusyview.Source = featurepart
                 minusyview.Direction = FreeCAD.Vector(0.0,-1.0,0.0)
-                minusyview.X = self.xpos+self.scale*depth+self.spacing
-                minusyview.Y = self.ypos+self.scale*(depth
-                                                     +height)+self.spacing
+                if(versionnumber < 0.19):
+                        
+                        # The "addView" method of a TechDraw::DrawPage
+                        # object appears to change the "X" and "Y"
+                        # properties of the TechDraw::DrawViewPart
+                        # object that's being added, so it's only when
+                        # the Drawing toolbox, rather than the
+                        # TechDraw toolbox, is being used that there's
+                        # any point setting the "X" and "Y" properties
+                        # (of the Drawing::FeatureViewPart object) here.
+                        # In any case, the "X" and "Y" properties have
+                        # to take different values when the TechDraw
+                        # toolbox is in use, since the TechDraw toolbox
+                        # measures Y in the opposite direction from the
+                        # Drawing toolbox, and the TechDraw toolbox
+                        # measures X and Y at the centre of a
+                        # DrawViewPart object, whereas the Drawing
+                        # toolbox measures X and Y at one corner of a
+                        # FeatureViewPart object.
+                        minusyview.X = self.xpos+self.scale*depth+self.spacing
+                        minusyview.Y = self.ypos+self.scale*(depth
+                                                             +height)\
+                                                             +self.spacing
+                else:
+                        minusyview.ScaleType = u"Custom"
                 minusyview.Scale = self.scale
-                minusyview.Rotation = 90.0
-                minusyview.ShowHiddenLines = True
-                minusyview.LineWidth = thick
-                minusyview.HiddenWidth = thin
-                self.drawing_page.addObject(minusyview)
-                plusxview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
-                                                                 self.title
-                                                                 +" from positive x")
-                reflectedtwo = dummydoc.addObject("Part::Mirroring",
-                                                  "reflectedtwo")
-                reflectedtwo.Source = featurepart
-                reflectedtwo.Normal = FreeCAD.Vector(0.0,0.0,1.0)
-                reflectedtwo.Base = FreeCAD.Vector(0.0,0.0,0.0)
-                plusxview.Source = reflectedtwo
+                if(versionnumber < 0.19):
+                        minusyview.Rotation = 90.0
+                        minusyview.ShowHiddenLines = True
+                        minusyview.LineWidth = thick
+                        minusyview.HiddenWidth = thin
+                        self.drawing_page.addObject(minusyview)
+
+                        plusxview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
+                                                                         self.title
+                                                                         +" from positive x")
+                else:
+                        minusyview.HardHidden = True
+                        minusyview.ViewObject.LineWidth = thick
+                        minusyview.ViewObject.HiddenWidth = thin
+                        minusyview.Label = ""
+                        self.drawing_page.addView(minusyview)
+                        minusyview.X = self.xpos+self.scale*(depth+0.5*width)\
+                                +self.spacing
+                        minusyview.Y = float(self.drawing_page.Template.Height)\
+                                -self.ypos-self.scale*(depth+0.5*height)\
+                                -self.spacing
+
+                        plusxview = self.drawing_page.Document.addObject("TechDraw::DrawViewPart",
+                                                                         self.title
+                                                                         +" from positive x")
+                
+                plusxview.Source = featurepart
                 plusxview.Direction = FreeCAD.Vector(1.0,0.0,0.0)
-                plusxview.X = self.xpos+self.scale*(2.0*depth
-                                                    +width)\
-                        +2.0*self.spacing
-                plusxview.Y = self.ypos+self.scale*(depth
-                                                    +height)+self.spacing
+                if(versionnumber < 0.19):
+                        
+                        # The "addView" method of a TechDraw::DrawPage
+                        # object appears to change the "X" and "Y"
+                        # properties of the TechDraw::DrawViewPart
+                        # object that's being added, so it's only when
+                        # the Drawing toolbox, rather than the
+                        # TechDraw toolbox, is being used that there's
+                        # any point setting the "X" and "Y" properties
+                        # (of the Drawing::FeatureViewPart object) here.
+                        # In any case, the "X" and "Y" properties have
+                        # to take different values when the TechDraw
+                        # toolbox is in use, since the TechDraw toolbox
+                        # measures Y in the opposite direction from the
+                        # Drawing toolbox, and the TechDraw toolbox
+                        # measures X and Y at the centre of a
+                        # DrawViewPart object, whereas the Drawing
+                        # toolbox measures X and Y at one corner of a
+                        # FeatureViewPart object.
+                        plusxview.X = self.xpos
+                        plusxview.Y = self.ypos+self.scale*(depth
+                                                            +height)\
+                                                            +self.spacing
+                else:
+                        plusxview.ScaleType = u"Custom"
                 plusxview.Scale = self.scale
-                plusxview.Rotation = 90.0
-                plusxview.ShowHiddenLines = True
-                plusxview.LineWidth = thick
-                plusxview.HiddenWidth = thin
-                self.drawing_page.addObject(plusxview)
-                plusyview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
-                                                                 self.title
-                                                                 +" from positive y")
+                if (versionnumber < 0.19):
+                        plusxview.Rotation = 270.0
+                        plusxview.ShowHiddenLines = True
+                        plusxview.LineWidth = thick
+                        plusxview.HiddenWidth = thin
+                        self.drawing_page.addObject(plusxview)
+
+                        plusyview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart",
+                                                                         self.title
+                                                                         +" from positive y")
+                else:
+                        plusxview.Rotation = 0.0
+                        plusxview.HardHidden = True
+                        plusxview.ViewObject.LineWidth = thick
+                        plusxview.ViewObject.HiddenWidth = thin
+                        plusxview.Label = ""
+                        self.drawing_page.addView(plusxview)
+                        plusxview.X = self.xpos+self.scale*0.5*depth
+                        plusxview.Y = float(self.drawing_page.Template.Height)\
+                                -self.ypos-self.scale*(depth+0.5*height)\
+                                -self.spacing
+
+                        plusyview = self.drawing_page.Document.addObject("TechDraw::DrawViewPart",
+                                                                         self.title
+                                                                         +" from positive y")
+                
                 plusyview.Source = featurepart
                 plusyview.Direction = FreeCAD.Vector(0.0,1.0,0.0)
-                plusyview.X = self.xpos+self.scale*(2.0*depth
-                                                    +2.0*width)\
-                        +3.0*self.spacing
-                plusyview.Y = self.ypos+self.scale*(depth
-                                                    +height)+self.spacing
+                if(versionnumber < 0.19):
+                        
+                        # The "addView" method of a TechDraw::DrawPage
+                        # object appears to change the "X" and "Y"
+                        # properties of the TechDraw::DrawViewPart
+                        # object that's being added, so it's only when
+                        # the Drawing toolbox, rather than the
+                        # TechDraw toolbox, is being used that there's
+                        # any point setting the "X" and "Y" properties
+                        # (of the Drawing::FeatureViewPart object) here.
+                        # In any case, the "X" and "Y" properties have
+                        # to take different values when the TechDraw
+                        # toolbox is in use, since the TechDraw toolbox
+                        # measures Y in the opposite direction from the
+                        # Drawing toolbox, and the TechDraw toolbox
+                        # measures X and Y at the centre of a
+                        # DrawViewPart object, whereas the Drawing
+                        # toolbox measures X and Y at one corner of a
+                        # FeatureViewPart object.
+                        plusyview.X = self.xpos+self.scale*(2.0*depth
+                                                            +2.0*width)\
+                                                            +3.0*self.spacing
+                        plusyview.Y = self.ypos+self.scale*(depth
+                                                            +height)\
+                                                            +self.spacing
+                else:
+                        plusyview.ScaleType = u"Custom"
                 plusyview.Scale = self.scale
-                plusyview.Rotation = 270.0
-                plusyview.ShowHiddenLines = True
-                plusyview.LineWidth = thick
-                plusyview.HiddenWidth = thin
-                self.drawing_page.addObject(plusyview)
-                pluszview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart"
-                                                                 ,self.title
-                                                                 +" from positive z")
+                if (versionnumber < 0.19):
+                        plusyview.Rotation = 270.0
+                        plusyview.ShowHiddenLines = True
+                        plusyview.LineWidth = thick
+                        plusyview.HiddenWidth = thin
+                        self.drawing_page.addObject(plusyview)
+
+                        pluszview = self.drawing_page.Document.addObject("Drawing::FeatureViewPart"
+                                                                         ,self.title
+                                                                         +" from positive z")
+                else:
+                        plusyview.Rotation = 0.0
+                        plusyview.HardHidden = True
+                        plusyview.ViewObject.LineWidth = thick
+                        plusyview.ViewObject.HiddenWidth = thin
+                        plusyview.Label = ""
+                        self.drawing_page.addView(plusyview)
+                        plusyview.X = self.xpos+self.scale*(2.0*depth
+                                                            +1.5*width)\
+                                                            +3.0*self.spacing
+                        plusyview.Y = float(self.drawing_page.Template.Height)\
+                                -self.ypos-self.scale*(depth+0.5*height)\
+                                -self.spacing
+
+                        pluszview = self.drawing_page.Document.addObject("TechDraw::DrawViewPart"
+                                                                         ,self.title
+                                                                         +" from positive z")
+                
                 pluszview.Source = featurepart
                 pluszview.Direction = FreeCAD.Vector(0.0,0.0,1.0)
-                pluszview.X = self.xpos+self.scale*depth+self.spacing
-                pluszview.Y = self.ypos+self.scale*(2.0*depth
-                                                    +height)\
-                                                    +2.0*self.spacing
+                if(versionnumber < 0.19):
+                        
+                        # The "addView" method of a TechDraw::DrawPage
+                        # object appears to change the "X" and "Y"
+                        # properties of the TechDraw::DrawViewPart
+                        # object that's being added, so it's only when
+                        # the Drawing toolbox, rather than the
+                        # TechDraw toolbox, is being used that there's
+                        # any point setting the "X" and "Y" properties
+                        # (of the Drawing::FeatureViewPart object) here.
+                        # In any case, the "X" and "Y" properties have
+                        # to take different values when the TechDraw
+                        # toolbox is in use, since the TechDraw toolbox
+                        # measures Y in the opposite direction from the
+                        # Drawing toolbox, and the TechDraw toolbox
+                        # measures X and Y at the centre of a
+                        # DrawViewPart object, whereas the Drawing
+                        # toolbox measures X and Y at one corner of a
+                        # FeatureViewPart object.
+                        pluszview.X = self.xpos+self.scale*depth+self.spacing
+                        pluszview.Y = self.ypos+self.scale*(2.0*depth
+                                                            +height)\
+                                                            +2.0*self.spacing
+                else:
+                        pluszview.ScaleType = u"Custom"
                 pluszview.Scale = self.scale
                 pluszview.Rotation = 0.0
-                pluszview.ShowHiddenLines = True
-                pluszview.LineWidth = thick
-                pluszview.HiddenWidth = thin
-                self.drawing_page.addObject(pluszview)
+                        
+                if(versionnumber < 0.19):
+                        pluszview.ShowHiddenLines = True
+                        pluszview.LineWidth = thick
+                        pluszview.HiddenWidth = thin
+                        self.drawing_page.addObject(pluszview)
+                else:
+                        pluszview.HardHidden = True
+                        pluszview.ViewObject.LineWidth = thick
+                        pluszview.ViewObject.HiddenWidth = thin
+                        pluszview.Label = ""
+                        self.drawing_page.addView(pluszview)
+                        pluszview.X = self.xpos+self.scale*(depth+0.5*width)\
+                                +self.spacing
+                        pluszview.Y = float(self.drawing_page.Template.Height)\
+                                -self.ypos-self.scale*(1.5*depth+height)\
+                                -2.0*self.spacing
+                        
                 self.drawing_page.Document.recompute()
 
                 # Leaving the dummy document open is a waste of RAM
@@ -434,9 +818,10 @@ class first_angle_projection:
                 # that already contains views of one shape, attempting
                 # to close the dummy document causes a segfault, at
                 # least under FreeCAD 0.16 on Scientific Linux 7.3, so
-                # the following command is commented out.  (The
+                # the following command operates only if the FreeCAD
+                # version is 0.18.4 or later.  (I've checked, and the
                 # segfault doesn't happen under FreeCAD 0.18.4 on
-                # Ubuntu 20.04, so at some point in the future, it's
-                # likely to be safe to uncomment the command.)
+                # Ubuntu 20.04.)
 
-                # FreeCAD.closeDocument("Dummy")
+                if (versionnumber >= 0.184):
+                        FreeCAD.closeDocument("Dummy")
