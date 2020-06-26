@@ -1,9 +1,9 @@
-# This is file Single_part.py
+# This is file Anisotropic_part.py
 
 # This is an example script intended to be distributed as part of a
 # software library centred on file eights.py
 
-# Single_part.py and eights.py were written by Dr. Daniel C. Hatton
+# Anisotropic_part.py and eights.py were written by Dr. Daniel C. Hatton
 
 # Material up to and including release 0.2 copyright (C) 2017
 # University of Plymouth Higher Education Corporation
@@ -39,20 +39,20 @@ import eights
 pagesize = 'A3'
 pageorientation = 'Landscape'
 creator = 'Joe D. Draftsman'
-longtitle = 'A very important part'
+longtitle = 'A very important anisotropic part'
 legalowner = 'Acme Design Company'
 approver = 'Jane C. Manager'
 doctype = 'part drawing'
 docstatus = 'for review'
-sheetnum = 1
+sheetnum = 4
 totalsheets = 6
 inversescale = 2
-partnumber = 'C1'
+partnumber = 'P1'
 partlist = partnumber
-drawingnum = 'TRY1'
-year = 2017
-month = 7
-day = 11
+drawingnum = 'TRY4'
+year = 2020
+month = 6
+day = 26
 revision = 'A'
 
 # All distances in millimetres
@@ -66,7 +66,7 @@ symbolyposition = 280.0
 
 C1side = 100.0
 C1posn = FreeCAD.Vector(0.0,0.0,0.0)
-theshape = Part.makeBox(C1side,C1side,C1side,C1posn)
+theshape = Part.makeBox(0.5*C1side,C1side,1.5*C1side,C1posn)
 scale = 1.0/inversescale
 drawingxposn = 100.0
 drawingyposn = 40.0

@@ -45,7 +45,7 @@ approver = 'Jane C. Manager'
 doctype = 'assembly drawing'
 docstatus = 'for review'
 sheetnum = 3
-totalsheets = 3
+totalsheets = 6
 inversescale = 2
 firstpartnumber = 'C2'
 secondpartnumber = 'S1'
@@ -75,10 +75,6 @@ S1diam = 100.0
 S1posn = FreeCAD.Vector(S1diam/2.0,S1diam/2.0,3.0*S1diam/2.0)
 thesecondshape = Part.makeSphere(S1diam/2.0,S1posn)
 scale = 1.0/inversescale
-firstdrawingxposn = 50.0
-firstdrawingyposn = 40.0
-seconddrawingxposn = 300.0
-seconddrawingyposn = 40.0
 
 theshape = thefirstshape.fuse(thesecondshape)
 

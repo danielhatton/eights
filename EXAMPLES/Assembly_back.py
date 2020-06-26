@@ -1,9 +1,9 @@
-# This is file Single_part.py
+# This is file Assembly_back.py
 
 # This is an example script intended to be distributed as part of a
 # software library centred on file eights.py
 
-# Single_part.py and eights.py were written by Dr. Daniel C. Hatton
+# Assembly_back.py and eights.py were written by Dr. Daniel C. Hatton
 
 # Material up to and including release 0.2 copyright (C) 2017
 # University of Plymouth Higher Education Corporation
@@ -22,8 +22,8 @@
 # which it incorporates, for more details.
 
 # You should have received a copy of the GNU Lesser General Public
-# License [in file ../LICENSE] along with this program.  If not,
-# see <https://www.gnu.org/licenses/>.
+# License [in file ../LICENSE] along with this program.  If not, see
+# <https://www.gnu.org/licenses/>.
 
 # Daniel Hatton thanks Dr. Justin E. Rigden, Specialist Intellectual
 # Property Advisor, for authorizing, on behalf of the University of
@@ -39,20 +39,21 @@ import eights
 pagesize = 'A3'
 pageorientation = 'Landscape'
 creator = 'Joe D. Draftsman'
-longtitle = 'A very important part'
+longtitle = 'A very important assembly laying on its back'
 legalowner = 'Acme Design Company'
 approver = 'Jane C. Manager'
-doctype = 'part drawing'
+doctype = 'assembly drawing'
 docstatus = 'for review'
-sheetnum = 1
+sheetnum = 6
 totalsheets = 6
 inversescale = 2
-partnumber = 'C1'
-partlist = partnumber
-drawingnum = 'TRY1'
-year = 2017
-month = 7
-day = 11
+firstpartnumber = 'C2'
+secondpartnumber = 'S1'
+partlist = firstpartnumber+','+secondpartnumber
+drawingnum = 'TRY6'
+year = 2020
+month = 6
+day = 26
 revision = 'A'
 
 # All distances in millimetres
@@ -66,10 +67,16 @@ symbolyposition = 280.0
 
 C1side = 100.0
 C1posn = FreeCAD.Vector(0.0,0.0,0.0)
-theshape = Part.makeBox(C1side,C1side,C1side,C1posn)
+thefirstshape = Part.makeBox(C1side,C1side,C1side,C1posn)
 scale = 1.0/inversescale
-drawingxposn = 100.0
-drawingyposn = 40.0
+drawingxposn = 30.0
+drawingyposn = 15.0
+S1diam = 100.0
+S1posn = FreeCAD.Vector(S1diam/2.0,3.0*S1diam/2.0,S1diam/2.0)
+thesecondshape = Part.makeSphere(S1diam/2.0,S1posn)
+scale = 1.0/inversescale
+
+theshape = thefirstshape.fuse(thesecondshape)
 
 thedocument = FreeCAD.newDocument("try_it")
 
@@ -99,7 +106,7 @@ symbol_adder = eights.add_first_angle_projection_symbol(conelargediameter,
                                                         thepage)
 dummytwo = symbol_adder.put_it_in('putanyoldrubbishhere')
 
-drawings_adder = eights.first_angle_projection(partnumber, theshape,
+drawings_adder = eights.first_angle_projection('Assembly', theshape,
                                                drawingviewspacing,
                                                drawingxposn,
                                                drawingyposn,
