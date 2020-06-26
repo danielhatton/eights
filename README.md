@@ -156,39 +156,48 @@ The module provides:
 
 * a class "`create_eights_drawing_sheet`", whose purpose is to provide
   the method "`create_it`", which adds, to an existing FreeCAD
-  document, a `Drawing::FeaturePage` object ("the sheet") whose
-  formatting is intended to be consistent with the BS 8888:2011
-  standard for a drawing sheet, and populates the title block of the
-  sheet, again in a way intended to be consistent with BS 8888:2011;
+  document, a `TechDraw::DrawPage` (if the FreeCAD version under which
+  the module is being run is 0.19 or later) or `Drawing::FeaturePage`
+  (if the FreeCAD version under which the module is being run is
+  earlier than 0.19) object ("the sheet") whose formatting is intended
+  to be consistent with the BS 8888:2011 standard for a drawing sheet,
+  and populates the title block of the sheet, again in a way intended
+  to be consistent with BS 8888:2011;
 * a class "`add_first_angle_projection_symbol`", whose purpose is to
   provide the method "`put_it_in`", which adds the standard BS
   8888:2011 symbol, indicating that a set of drawings are in first
-  angle projection ("the symbol"), to an existing
-  `Drawing::FeaturePage` object ("the sheet").  The method `put_it_in`
-  also creates a new FreeCAD Document ("the dummy document"),
-  containing various objects that are created as intermediate steps on
-  the way to adding the symbol to the sheet, but which do not need to
-  exist in the same document as the sheet.  The method `put_it_in`
-  also modifies the parent document of the sheet, by adding to it two
-  `Drawing::FeatureViewPart` objects, which are intermediate steps on
-  the way to adding the symbol to the sheet, and which have to exist
-  _in the same document as the sheet_ in order to add the symbol to
-  the sheet; and
+  angle projection ("the symbol"), to an existing `TechDraw::DrawPage`
+  or `Drawing::FeaturePage` object ("the sheet").  The method
+  `put_it_in` also creates a new FreeCAD Document ("the dummy
+  document"), containing various objects that are created as
+  intermediate steps on the way to adding the symbol to the sheet, but
+  which do not need to exist in the same document as the sheet.  The
+  method `put_it_in` also modifies the parent document of the sheet,
+  by adding to it two `TechDraw::DrawViewPart` (if the FreeCAD version
+  under which the module is being run is 0.19 or later) or
+  `Drawing::FeatureViewPart` (if the FreeCAD version under which the
+  module is being run is earlier than 0.19) objects, which are
+  intermediate steps on the way to adding the symbol to the sheet, and
+  which have to exist _in the same document as the sheet_ in order to
+  add the symbol to the sheet; and
 * a class "`first_angle_projection`", whose purpose is to provide the
   method "`fap`", which takes any object ("the shape") which can be
   assigned to the "`Shape`" property of a `Part::Feature` object, and
   adds a set of axonometric drawings ("the views") of the shape in
-  first angle projection to an existing `Drawing::FeaturePage` object
-  ("the sheet"), following the conventions in BS 8888:2011.  The
-  method `fap` also creates a new FreeCAD Document ("the dummy
-  document"), containing various objects that are created as
-  intermediate steps on the way to adding the views to the sheet, but
-  which do not need to exist in the same document as the sheet.  The
-  method `fap` also modifies the parent document of the sheet, by
-  adding to it six `Drawing::FeatureViewPart` objects, which are
-  intermediate steps on the way to adding the views to the sheet, and
-  which have to exist _in the same document as the sheet_ in order to
-  add the views to the sheet.
+  first angle projection to an existing `TechDraw::DrawPage` or
+  `Drawing::FeaturePage` object ("the sheet"), following the
+  conventions in BS 8888:2011.  The method `fap` also creates a new
+  FreeCAD Document ("the dummy document"), containing various objects
+  that are created as intermediate steps on the way to adding the
+  views to the sheet, but which do not need to exist in the same
+  document as the sheet.  The method `fap` also modifies the parent
+  document of the sheet, by adding to it six `TechDraw::DrawViewPart`
+  (if the FreeCAD version under which the module is being run is 0.19
+  or later) or `Drawing::FeatureViewPart` (if the FreeCAD version
+  under which the module is being run is earlier than 0.19) objects,
+  which are intermediate steps on the way to adding the views to the
+  sheet, and which have to exist _in the same document as the sheet_
+  in order to add the views to the sheet.
 
 # Invocation
 
@@ -201,8 +210,11 @@ necessary to invoke
     import Part
     import eights
 
-To create a BS 8888:2011 drawing sheet, as a `Drawing::FeaturePage`
-object to be stored in "`any_var_name`":
+To create a BS 8888:2011 drawing sheet, as a `TechDraw::DrawPage` (if
+the FreeCAD version under which the module is being run is 0.19 or
+later) or `Drawing::FeaturePage` (if the FreeCAD version under which
+the module is being run is earlier than 0.19) object to be stored in
+"`any_var_name`":
 
     any_var_name = eights.create_eights_drawing_sheet(<doc>, <shorttitle>,
                                                       <pagesize>, <orientation>,
@@ -302,8 +314,9 @@ where:
   placed (on the systems where the present module has been tested,
   it's in millimetres, but this may depend on some configuration
   option of FreeCAD); and
-* `<thepage>` is a `Drawing::FeaturePage` object, representing the drawing
-  sheet to which the symbol is to be added.
+* `<thepage>` is a `TechDraw::DrawPage` or`Drawing::FeaturePage`
+  object, representing the drawing sheet to which the symbol is to be
+  added.
 
 To add a first angle projection set for a 3D shape to a drawing sheet:
 
@@ -340,16 +353,17 @@ where:
 * `<scale>` is a floating-point number, representing the scale at which
   the first angle projection set is to be drawn (BS 8888:2011
   indicates a preference for this number being either 0.5 or 0.2); and
-* `<thepage>` is a Drawing::FeaturePage object, representing the drawing
-  sheet to which the first angle projection set is to be added.
+* `<thepage>` is a `TechDraw::DrawPage` or `Drawing::FeaturePage`
+  object, representing the drawing sheet to which the first angle
+  projection set is to be added.
 
 # Example scripts (test cases)
 
-Three example python scripts that make use of this module are
-provided, in the directory `EXAMPLES`.  In each case, one can run the
-example script by opening it in the FreeCAD GUI and pressing the GUI
-"Execute the macro in the editor" button.  The expected functionality
-of the example scripts is as follows:
+Six example python scripts that make use of this module are provided,
+in the directory `EXAMPLES`.  In each case, one can run the example
+script by opening it in the FreeCAD GUI and pressing the GUI "Execute
+the macro in the editor" button.  The expected functionality of the
+example scripts is as follows:
 
 * `Single_part.py` creates a drawing sheet showing, in first angle
   projection, a single part (a cube of side 100 mm), with intended
@@ -365,6 +379,27 @@ of the example scripts is as follows:
   diameter 100 mm) fused into an assembly, with intended output as
   follows: ![Intended output for assembly
   example](EXAMPLES/Assembly_intended_output.png).
+* `Anisotropic_part.py` creates a drawing sheet showing, in first
+  angle projection, a single part (a rectangular parallelepiped of
+  sides 50 mm, 100 mm, and 150 mm), with intended output as follows:
+  ![Intended output for anisotropic part
+  example](EXAMPLES/Anisotropic_part_intended_output.png).
+* `Assembly_side.py` creates a drawing sheet showing, in first angle
+  projection, the same assembly as in `Assembly.py`, but in a
+  different orientation.  This has been added because previously, all
+  the test cases had reflection symmetry about the same planes, which
+  had caused a particular bug (now fixed) to remain undetected through
+  multiple releases.  The intended output is as follows: ![Intended
+  output for differently-oriented assembly
+  example](EXAMPLES/Assembly_side_intended_output.png).
+* `Assembly_back.py` creates a drawing sheet showing, in first angle
+  projection, the same assembly as in `Assembly.py` and
+  `Assembly_side.py`, but in a different orientation.  This has been
+  added because previously, all the test cases had reflection symmetry
+  about the same planes, which had caused a particular bug (now fixed)
+  to remain undetected through multiple releases.  The intended output
+  is as follows: ![Intended output for differently-oriented assembly
+  example](EXAMPLES/Assembly_back_intended_output.png).
 
 # Comparison and contrast with other software of similar purpose
 
@@ -430,13 +465,10 @@ Drawing macro, depending on the use case).
 
 ## Advantages of the Automatic Drawing macro
 
-* The Automatic Drawing macro does not create extraneous dummy
-  documents, whereas the present module does (see the "Bugs" section
-  below).
 * The Automatic Drawing macro adds fewer extraneous
-  `Drawing::FeatureViewPart` objects to the parent document of the
-  drawing sheet than the present module (although it still adds
-  some).
+  `TechDraw::DrawViewPart` or `Drawing::FeatureViewPart` objects to
+  the parent document of the drawing sheet than the present module
+  (although it still adds some).
 * The Automatic Drawing module can be straightforwardly launched
   either from menus and dialogue boxes in the FreeCAD GUI or from
   Python commands, whereas the present module can be straightforwardly
@@ -487,12 +519,15 @@ supplied by github user hamish2014; however, the author of the present
 module has been unable to find a convenient way of scripting the
 Drawing Dimensioning Workbench in Python.
 
-The `create_it` method in the `create_eights_drawing_sheet` class doesn't
-trap any attempt by the user to select a combination of paper size and
-orientation that doesn't exist in FreeCAD's collection of ISO7200
-templates.  When this happens, the method goes ahead and creates a
-`Drawing:FeaturePage` object, to which content can be added by other
-methods, but which cannot be viewed in the FreeCAD GUI.  The only
+The `create_it` method in the `create_eights_drawing_sheet` class
+doesn't trap any attempt by the user to select a combination of paper
+size and orientation that doesn't exist in FreeCAD's collection of
+ISO7200 templates.  When this happens, the method goes ahead and
+creates a `TechDraw::DrawPage` (if the FreeCAD version under which the
+module is being run is 0.19 or later) or `Drawing:FeaturePage` (if the
+FreeCAD version under which the module is being run is earlier than
+0.19) object, to which content can be added by other methods, but
+which cannot be viewed in the FreeCAD GUI.  The only
 subsequently-visible (to the user) clue as to what's wrong is that
 hovering the mouse over the manifestation of the relevant drawing
 sheet in the Tree View produces pop-up text "Cannot open file
@@ -530,28 +565,30 @@ planes bounding that octant are tangent to the solid shape.  When
 that's not the case, the method produces sets of projections which are
 not _wrong_ in any technical sense, but which do look decidedly odd.
 
-The dummy documents created by the `put_it_in` method in the
-`add_first_angle_projection_symbol` class and by the `fap` method in
-the `first_angle_projection` class are a waste of RAM and clutter up
-the GUI, and ideally should be closed just before the respective
-methods exit.  Unfortunately, adding commands to the end of the
-methods to close the dummy documents causes a segfault, at least under
-FreeCAD 0.16 on Scientific Linux 7.3 (and in some cases under FreeCAD
-0.16 on Fedora 28), so the methods currently leave the dummy documents
-open.  The segfault doesn't happen under FreeCAD 0.18.4 on Ubuntu
-20.04, so at some point in the future, it's likely to be safe to
-uncomment the commands in `eights.py` that will close the dummy
-documents.
-
 In setting the widths of lines in the drawing to comply with BS
 8888:2011, both the `put_it_in` method in the
 `add_first_angle_projection_symbol` class and the `fap` method in the
 `first_angle_projection` class assume that FreeCAD will interpret
 floating-point numbers, assigned to the `LineWidth` and `HiddenWidth`
-properties of a `Drawing::FeatureViewPart` object, as being in
-millimetres.  This assumption has so far proved correct on the systems
-on which the present module has been tested, but there may be some
-FreeCAD configuration option that can render it incorrect.
+properties of a `TechDraw::DrawViewPart` or `Drawing::FeatureViewPart`
+object, as being in millimetres.  This assumption has so far proved
+correct on the systems on which the present module has been tested,
+but there may be some FreeCAD configuration option that can render it
+incorrect.
+
+(This bug is fixed as long as the module is being run under FreeCAD
+version 0.18.4 or later.)  The dummy documents created by the
+`put_it_in` method in the `add_first_angle_projection_symbol` class
+and by the `fap` method in the `first_angle_projection` class are a
+waste of RAM and clutter up the GUI, and ideally should be closed just
+before the respective methods exit.  Unfortunately, adding commands to
+the end of the methods to close the dummy documents causes a segfault,
+at least under FreeCAD 0.16 on Scientific Linux 7.3 (and in some cases
+under FreeCAD 0.16 on Fedora 28).  The segfault doesn't happen under
+FreeCAD 0.18.4 on Ubuntu 20.04, so the present state of the code is
+that the dummy documents are closed in a conditional code segment that
+is executed only if the FreeCAD version under which the module is
+being run is 0.18.4 or later.
 
 # Citing
 
