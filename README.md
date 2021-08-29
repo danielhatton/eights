@@ -10,7 +10,7 @@ on file `eights.py` (see "Description" section below).
 Material up to and including release 0.2 copyright (C) 2017-2018
 University of Plymouth Higher Education Corporation
 
-Changes since release 0.2 copyright (C) 2020 Dr. Daniel C. Hatton
+Changes since release 0.2 copyright (C) 2020-2021 Dr. Daniel C. Hatton
 
 This program, including this documentation file, is free software: you
 can redistribute it and/or modify it under the terms of the GNU Lesser
@@ -180,6 +180,23 @@ The module provides:
   intermediate steps on the way to adding the symbol to the sheet, and
   which have to exist _in the same document as the sheet_ in order to
   add the symbol to the sheet; and
+* a class "`add_third_angle_projection_symbol`", whose purpose is to
+  provide the method "`put_it_in`", which adds the standard BS
+  8888:2011 symbol, indicating that a set of drawings are in third
+  angle projection ("the symbol"), to an existing `TechDraw::DrawPage`
+  or `Drawing::FeaturePage` object ("the sheet").  The method
+  `put_it_in` also creates a new FreeCAD Document ("the dummy
+  document"), containing various objects that are created as
+  intermediate steps on the way to adding the symbol to the sheet, but
+  which do not need to exist in the same document as the sheet.  The
+  method `put_it_in` also modifies the parent document of the sheet,
+  by adding to it two `TechDraw::DrawViewPart` (if the FreeCAD version
+  under which the module is being run is 0.19 or later) or
+  `Drawing::FeatureViewPart` (if the FreeCAD version under which the
+  module is being run is earlier than 0.19) objects, which are
+  intermediate steps on the way to adding the symbol to the sheet, and
+  which have to exist _in the same document as the sheet_ in order to
+  add the symbol to the sheet; and
 * a class "`first_angle_projection`", whose purpose is to provide the
   method "`fap`", which takes any object ("the shape") which can be
   assigned to the "`Shape`" property of a `Part::Feature` object, and
@@ -191,6 +208,24 @@ The module provides:
   that are created as intermediate steps on the way to adding the
   views to the sheet, but which do not need to exist in the same
   document as the sheet.  The method `fap` also modifies the parent
+  document of the sheet, by adding to it six `TechDraw::DrawViewPart`
+  (if the FreeCAD version under which the module is being run is 0.19
+  or later) or `Drawing::FeatureViewPart` (if the FreeCAD version
+  under which the module is being run is earlier than 0.19) objects,
+  which are intermediate steps on the way to adding the views to the
+  sheet, and which have to exist _in the same document as the sheet_
+  in order to add the views to the sheet.
+* a class "`third_angle_projection`", whose purpose is to provide the
+  method "`tap`", which takes any object ("the shape") which can be
+  assigned to the "`Shape`" property of a `Part::Feature` object, and
+  adds a set of axonometric drawings ("the views") of the shape in
+  third angle projection to an existing `TechDraw::DrawPage` or
+  `Drawing::FeaturePage` object ("the sheet"), following the
+  conventions in BS 8888:2011.  The method `tap` also creates a new
+  FreeCAD Document ("the dummy document"), containing various objects
+  that are created as intermediate steps on the way to adding the
+  views to the sheet, but which do not need to exist in the same
+  document as the sheet.  The method `tap` also modifies the parent
   document of the sheet, by adding to it six `TechDraw::DrawViewPart`
   (if the FreeCAD version under which the module is being run is 0.19
   or later) or `Drawing::FeatureViewPart` (if the FreeCAD version
@@ -359,7 +394,7 @@ where:
 
 # Example scripts (test cases)
 
-Six example python scripts that make use of this module are provided,
+Twelve example python scripts that make use of this module are provided,
 in the directory `EXAMPLES`.  In each case, one can run the example
 script by opening it in the FreeCAD GUI and pressing the GUI "Execute
 the macro in the editor" button.  The expected functionality of the
@@ -400,6 +435,10 @@ example scripts is as follows:
   to remain undetected through multiple releases.  The intended output
   is as follows: ![Intended output for differently-oriented assembly
   example](EXAMPLES/Assembly_back_intended_output.png).
+
+In addition to the six scripts listed above, there are six additional
+scripts, with `_third` inserted into the filenames, which represent
+the same objects in third angle projection.
 
 # Comparison and contrast with other software of similar purpose
 

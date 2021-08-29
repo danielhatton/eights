@@ -416,6 +416,95 @@ class add_first_angle_projection_symbol(eitherone):
                 if (versionnumber >= 0.184):
                         FreeCAD.closeDocument("Dummy")
 
+class add_third_angle_projection_symbol(eitherone):
+
+        # The purpose of this class is to provide the method
+        # "put_it_in", which adds the standard BS 8888:2011 symbol,
+        # indicating that a set of drawings are in third angle
+        # projection ("the symbol"), to an existing TechDraw::DrawPage
+        # or Drawing::FeaturePage object ("the sheet").  The method
+        # put_it_in also creates a new FreeCAD Document ("the dummy
+        # document"), containing various objects that are created as
+        # intermediate steps on the way to adding the symbol to the
+        # sheet, but which do not need to exist in the same document
+        # as the sheet.  The method put_it_in also modifies the parent
+        # document of the sheet, by adding to it two
+        # TechDraw::DrawViewPart or Drawing::FeatureViewPart objects,
+        # which are intermediate steps on the way to adding the symbol
+        # to the sheet, and which have to exist _in the same document
+        # as the sheet_ in order to add the symbol to the sheet.
+
+        def __init__(self, H_in, h_in, d_in, xpos_in, ypos_in,
+                     drawing_page_in):
+                self.H = H_in
+                self.h = h_in
+                self.d = d_in
+                self.xpos = xpos_in
+                self.ypos = ypos_in
+                self.drawing_page = drawing_page_in
+
+        def put_it_in(self,dummy):
+                self.title = "third_angle_projection_symbol"
+                thick = 0.7 # The wider of the two line widths suggested in\
+                             # BS 8888:2011
+                thin = 0.35 # The narrower of the two line widths suggested\
+                            # in BS 8888:2011
+
+                # BS 8888:2011 does not specify the exact dimensions
+                # of the truncated cone, axonometric projections of
+                # which form the symbol, so those dimensions are taken
+                # from user input.
+
+                base_radius = 0.5*self.h
+                top_radius = 0.5*self.H
+                self.spacing = 3.0*self.d
+                depth = self.H
+                height = self.H
+                width = self.H
+                top_centre = FreeCAD.Vector(top_radius,0.0,top_radius)
+                depth_wise_direction = FreeCAD.Vector(0.0,1.0,0.0)
+                part = Part.makeCone(base_radius,top_radius,self.H,
+                                     top_centre,depth_wise_direction)
+                dummydoc = FreeCAD.newDocument("Dummy")
+                part_in_tree = dummydoc.addObject("Part::Feature",
+                                                  self.title)
+                part_in_tree.Shape = part
+                featurepart = dummydoc.getObject(self.title)
+                versionnumber = float(FreeCAD.Version()[0])\
+                        +0.01*float(FreeCAD.Version()[1])
+                self.scale = 1.0
+                
+                plusxview = self.addsingleview(versionnumber,
+                                               " from positive x",
+                                               featurepart,
+                                               FreeCAD.Vector(1.0,0.0,0.0),
+                                               width,depth,height,1.0,0.0,
+                                               1.0,0.0,0.0,0.0,0.5,
+                                               1.0,1.0,0.0,0.0,270.0,0.0,thick,
+                                               thin)
+                minusyview = self.addsingleview(versionnumber,
+                                                " from negative y",
+                                                featurepart,
+                                                FreeCAD.Vector(0.0,-1.0,0.0),
+                                                width,depth,height,0.0,0.0,
+                                                0.0,0.0,0.0,0.0,0.0,
+                                                0.5,0.0,0.0,0.0,90.0,0.0,thick,
+                                                thin)
+                self.drawing_page.Document.recompute()
+
+                # Leaving the dummy document open is a waste of RAM
+                # and clutters up the GUI, so ideally, one would like
+                # to close it.  Unfortunately, attempting to close the
+                # dummy document causes a segfault, at least under
+                # FreeCAD 0.16 on Scientific Linux 7.3 and FreeCAD
+                # 0.16 on Fedora 28, so the following command operates
+                # only if the FreeCAD version is 0.18.4 or later.
+                # (I've checked, and the segfault doesn't happen under
+                # FreeCAD 0.18.4 on Ubuntu 20.04.)
+
+                if (versionnumber >= 0.184):
+                        FreeCAD.closeDocument("Dummy")
+
 class first_angle_projection(eitherone):
 
         # The purpose of this class is to provide the method "fap",
@@ -542,6 +631,156 @@ class first_angle_projection(eitherone):
                                                0.5*self.scale,1.0,
                                                1.5*self.scale,
                                                1.0*self.scale,0.0,0.0,thick,
+                                               thin)
+                                               
+                                               
+                self.drawing_page.Document.recompute()
+
+                # Leaving the dummy document open is a waste of RAM
+                # and clutters up the GUI, so ideally, one would like
+                # to close it.  Unfortunately, when this method is
+                # being used to add views of a second shape to a sheet
+                # that already contains views of one shape, attempting
+                # to close the dummy document causes a segfault, at
+                # least under FreeCAD 0.16 on Scientific Linux 7.3, so
+                # the following command operates only if the FreeCAD
+                # version is 0.18.4 or later.  (I've checked, and the
+                # segfault doesn't happen under FreeCAD 0.18.4 on
+                # Ubuntu 20.04.)
+
+                if (versionnumber >= 0.184):
+                        FreeCAD.closeDocument("Dummy")
+
+
+class third_angle_projection(eitherone):
+
+        # The purpose of this class is to provide the method "tap",
+        # which takes any object ("the shape") which can be assigned
+        # to the "Shape" property of a Part::Feature object, and adds
+        # a set of axonometric drawings ("the views") of the shape in
+        # third angle projection to an existing TechDraw::DrawPage or
+        # Drawing::FeaturePage object ("the sheet"), following the
+        # conventions in BS 8888:2011.  The method tap also creates a
+        # new FreeCAD Document ("the dummy document"), containing
+        # various objects that are created as intermediate steps on
+        # the way to adding the views to the sheet, but which do not
+        # need to exist in the same document as the sheet.  The method
+        # fap also modifies the parent document of the sheet, by
+        # adding to it six TechDraw::DrawViewPart or
+        # Drawing::FeatureViewPart objects, which are intermediate
+        # steps on the way to adding the views to the sheet, and which
+        # have to exist _in the same document as the sheet_ in order
+        # to add the views to the sheet.
+
+        def __init__(self, title_in, part_in, spacing_in, xpos_in, ypos_in,
+                     scale_in, drawing_page_in):
+            self.title = title_in
+            self.part = part_in
+            self.spacing = spacing_in
+            self.xpos = xpos_in
+            self.ypos = ypos_in
+            self.scale = scale_in
+            self.drawing_page = drawing_page_in
+
+        def tap(self,dummy):
+                thick = 0.7 # The wider of the two line widths suggested in\
+                            # BS 8888:2011
+                thin = 0.35 # The narrower of the two line widths suggested\
+                            # in BS 8888:2011
+
+                # Measure the dimensions of the shape, in order to know how
+                # much space is needed on the sheet for the views.
+
+                width = self.part.BoundBox.XLength
+                depth = self.part.BoundBox.YLength
+                height = self.part.BoundBox.ZLength
+                dummydoc = FreeCAD.newDocument("Dummy")
+                part_in_tree = dummydoc.addObject("Part::Feature",
+                                                  self.title)
+                part_in_tree.Shape = self.part
+                featurepart = dummydoc.getObject(self.title)
+                versionnumber = float(FreeCAD.Version()[0])\
+                        +0.01*float(FreeCAD.Version()[1])
+                minuszview = self.addsingleview(versionnumber,
+                                                " from negative z",
+                                                featurepart,
+                                                FreeCAD.Vector(0.0,0.0,-1.0),
+                                                width,depth,height,
+                                                1.0*self.scale,0.0*self.scale,
+                                                1.0,1.0*self.scale,
+                                                1.0*self.scale,2.0,
+                                                1.0*self.scale,
+                                                0.5*self.scale,1.0,
+                                                1.5*self.scale,
+                                                1.0*self.scale,180.0,0.0,thick,
+                                                thin)
+                minusxview = self.addsingleview(versionnumber,
+                                                " from negative x",
+                                                featurepart,
+                                                FreeCAD.Vector(-1.0,0.0,0.0),
+                                                width,depth,height,
+                                                1.0*self.scale,0.0*self.scale,
+                                                0.0,1.0*self.scale,
+                                                1.0*self.scale,1.0,
+                                                0.5*self.scale,
+                                                0.0*self.scale,0.0,
+                                                1.0*self.scale,
+                                                0.5*self.scale,
+                                                90.0,0.0,thick,
+                                                thin)
+                minusyview = self.addsingleview(versionnumber,
+                                                " from negative y",
+                                                featurepart,
+                                                FreeCAD.Vector(0.0,-1.0,0.0),
+                                                width,depth,height,
+                                                1.0*self.scale,0.0*self.scale,
+                                                1.0,1.0*self.scale,
+                                                1.0*self.scale,1.0,
+                                                1.0*self.scale,
+                                                0.5*self.scale,1.0,
+                                                1.0*self.scale,
+                                                0.5*self.scale,90.0,0.0,thick,
+                                                thin)
+                plusxview = self.addsingleview(versionnumber,
+                                               " from positive x",
+                                               featurepart,
+                                               FreeCAD.Vector(1.0,0.0,0.0),
+                                               width,depth,height,
+                                               1.0*self.scale,1.0*self.scale,
+                                               2.0,1.0*self.scale,
+                                               1.0*self.scale,1.0,
+                                               1.5*self.scale,
+                                               1.0*self.scale,2.0,
+                                               1.0*self.scale,
+                                               0.5*self.scale,
+                                               270.0,0.0,thick,
+                                               thin)
+                plusyview = self.addsingleview(versionnumber,
+                                               " from positive y",
+                                               featurepart,
+                                               FreeCAD.Vector(0.0,1.0,0.0),
+                                               width,depth,height,
+                                               2.0*self.scale,2.0*self.scale,
+                                               3.0,1.0*self.scale,
+                                               1.0*self.scale,1.0,
+                                               2.0*self.scale,
+                                               1.5*self.scale,3.0,
+                                               1.0*self.scale,
+                                               0.5*self.scale,270.0,0.0,thick,
+                                               thin)
+                pluszview = self.addsingleview(versionnumber,
+                                               " from positive z",
+                                               featurepart,
+                                               FreeCAD.Vector(0.0,0.0,1.0),
+                                               width,depth,height,
+                                               1.0*self.scale,0.0*self.scale,
+                                               1.0,1.0*self.scale,
+                                               0.0*self.scale,0.0,
+                                               1.0*self.scale,
+                                               0.5*self.scale,1.0,
+                                               0.5*self.scale,
+                                               0.0*self.scale,
+                                               0.0,0.0,thick,
                                                thin)
                                                
                                                
